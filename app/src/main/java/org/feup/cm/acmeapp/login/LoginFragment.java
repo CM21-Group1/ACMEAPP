@@ -15,27 +15,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel mViewModel;
     private String username;
     private String password;
-
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
-    }
+    private View viewTemp;
+    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/login";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,7 +46,6 @@ public class LoginFragment extends Fragment {
         final Button buttonLogin = root.findViewById(R.id.login_btn);
         final Button buttonSignUp = root.findViewById(R.id.register_btn);
 
-
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,12 +53,21 @@ public class LoginFragment extends Fragment {
                 EditText username_edittext = root.findViewById(R.id.edit_username);
                 EditText password_edittext = root.findViewById(R.id.edit_pwd);
 
-                username = username_edittext.toString();
-                password = password_edittext.toString();
+                username = username_edittext.getText().toString();
+                password = password_edittext.getText().toString();
 
-                new PostLoginContentTask().execute();
 
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+                if(username.isEmpty() && password.isEmpty()){
+                    Toast.makeText(getContext(), "Username & Password empty", Toast.LENGTH_LONG).show();
+                }else if(username.isEmpty()){
+                    Toast.makeText(getContext(), "Username empty", Toast.LENGTH_LONG).show();
+                }else if(password.isEmpty()){
+                    Toast.makeText(getContext(), "Password empty", Toast.LENGTH_LONG).show();
+                }else{
+                    viewTemp = view;
+                    new APIRequest().execute();
+                }
+
             }
         });
 
@@ -81,40 +88,62 @@ public class LoginFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    private class PostLoginContentTask extends AsyncTask<Void, Void, Void> {
-
-        private final static String url = "https://acmeapi-cm.herokuapp.com/auth/login";
+    private class APIRequest extends AsyncTask<Void, Void, String> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
+
+            JSONObject jsonBody;
+            String requestBody;
+            HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(this.url); //Enter URL here
-                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setRequestMethod("POST"); // here you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
-                httpURLConnection.setRequestProperty("Content-Type", "application/json"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
-                httpURLConnection.connect();
+                jsonBody = new JSONObject();
+                jsonBody.put("username", username);
+                jsonBody.put("password", password);
+                requestBody = Utils.buildPostParameters(jsonBody);
+                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", baseUrl, null, "application/json", requestBody);
+                InputStream inputStream;
 
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("username", username);
-                jsonObject.put("password", password);
+                if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection.getInputStream();
+                } else {
+                    inputStream = urlConnection.getErrorStream();
+                }
 
-                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-                wr.writeBytes(jsonObject.toString());
-                wr.flush();
-                wr.close();
-
-            } catch (MalformedURLException e) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp, response = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    response += temp;
+                }
+                return response;
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+                return e.toString();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
             }
-
-            return null;
         }
 
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            System.out.println(response);
+            if(response.equals("{\"message\":\"Username Not found.\"}")){
+                Toast.makeText(getContext(), "Username Not found.", Toast.LENGTH_LONG).show();
+            }else if(response.equals("{\"message\":\"Password incorrect\"}")){
+                Toast.makeText(getContext(), "Password incorrect.", Toast.LENGTH_LONG).show();
+            }else{
+//                try {
+//                    JSONObject jsonBody = new JSONObject(response);
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+                Navigation.findNavController(viewTemp).navigate(R.id.action_loginFragment_to_homeFragment);
+            }
+        }
     }
 }
 
