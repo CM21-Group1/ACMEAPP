@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Utils;
-import org.feup.cm.acmeapp.login.LoginFragment;
-import org.feup.cm.acmeapp.login.LoginViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 

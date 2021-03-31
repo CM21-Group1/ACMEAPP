@@ -1,7 +1,9 @@
 package org.feup.cm.acmeapp.Home;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,14 +11,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.ShoppingCart.ShoppingCartFragment;
+import org.feup.cm.acmeapp.register.RegisterViewModel;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel mViewModel;
+    private BottomNavigationView bottomNavigation;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -25,7 +33,32 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.home_fragment, container, false);
+
+        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        View root = inflater.inflate(R.layout.home_fragment, container, false);
+
+        bottomNavigation = root.findViewById(R.id.bottomNavigationView);
+
+        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        System.out.println("HOME FRAGMENT");
+                        return true;
+                    case R.id.unknown:
+                        System.out.println("UNKNOWN FRAGMENT");
+                        return true;
+                    case R.id.shopping_cart:
+                        System.out.println("SHOPPING CART");
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        return root;
     }
 
     @Override
