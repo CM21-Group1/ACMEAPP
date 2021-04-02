@@ -10,6 +10,12 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String test = "test";
+
+    public String getTest() {
+        return test;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

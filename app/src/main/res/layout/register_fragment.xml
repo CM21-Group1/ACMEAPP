@@ -8,12 +8,14 @@
     android:orientation="vertical"
     tools:context=".register.RegisterFragment">
 
+
     <EditText
         android:id="@+id/edit_register_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Name"
+        android:drawableEnd="@drawable/icon_user"
         android:inputType="textPersonName" />
 
     <EditText
@@ -22,6 +24,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/username"
+        android:drawableEnd="@drawable/icon_user"
         android:inputType="textPersonName" />
 
     <EditText
@@ -30,6 +33,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/password"
+        android:drawableEnd="@drawable/icon_password"
         android:inputType="textPassword" />
 
     <EditText
@@ -37,7 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Payment Card"
+        android:hint="@string/payment_card"
+        android:drawableEnd="@drawable/icon_password"
         android:inputType="number" />
 
     <Button
@@ -46,5 +51,5 @@
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
         android:layout_marginTop="50dp"
-        android:text="Go!" />
+        android:text="@string/go" />
 </LinearLayout>

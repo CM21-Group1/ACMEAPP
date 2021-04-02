@@ -1,8 +1,11 @@
 package org.feup.cm.acmeapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class User implements Parcelable {
     private String name;
     private String username;
     private String password;
@@ -20,6 +23,25 @@ public class User {
         this.payment_card = payment_card;
     }
 
+    protected User(Parcel in) {
+        name = in.readString();
+        username = in.readString();
+        password = in.readString();
+        payment_card = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     public String getName() {
         return name;
     }
@@ -34,5 +56,18 @@ public class User {
 
     public String getPayment_card() {
         return payment_card;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(payment_card);
     }
 }

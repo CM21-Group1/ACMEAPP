@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Utils;
+import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +50,10 @@ public class RegisterFragment extends Fragment {
         View root = inflater.inflate(R.layout.register_fragment, container, false);
 
         final Button buttonSignUp = root.findViewById(R.id.btn_register);
+
+        User user = getArguments().getParcelable("user");
+
+        System.out.println(user.getName());
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,5 +152,6 @@ public class RegisterFragment extends Fragment {
             }
         }
     }
+
 
 }

@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="@string/username"/>
+        android:drawableEnd="@drawable/icon_user"
+        android:hint="@string/username" />
 
     <EditText
         android:id="@+id/edit_pwd"
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
+        android:drawableEnd="@drawable/icon_password"
         android:hint="@string/password" />
 
     <Button
@@ -47,5 +49,10 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/buttons"
         android:text="@string/register" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

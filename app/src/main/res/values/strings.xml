@@ -9,4 +9,8 @@
     <string name="shopping_cart">Shopping Cart</string>
     <string name="home">Home</string>
     <string name="not_defined">Not defined</string>
+    <string name="payment_card">Payment Card</string>
+    <string name="proceed_to_checkout">Proceed to Checkout</string>
+    <string name="add_new_product">Add new product</string>
+    <string name="delete_product">delete</string>
 </resources>

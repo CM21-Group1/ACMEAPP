@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.home_fragment, container, false);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
+        bottomNavigation.setSelectedItemId(R.id.home);
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
@@ -51,7 +53,7 @@ public class HomeFragment extends Fragment {
                         System.out.println("UNKNOWN FRAGMENT");
                         return true;
                     case R.id.shopping_cart:
-                        System.out.println("SHOPPING CART");
+                        Navigation.findNavController(root).navigate(R.id.action_homeFragment_to_shoppingCartFragment);
                         return true;
                 }
                 return false;

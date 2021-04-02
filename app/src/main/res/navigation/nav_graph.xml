@@ -19,6 +19,9 @@
             app:popUpTo="@+id/nav_graph"
             app:popUpToInclusive="true"
             />
+        <argument
+            android:name="user"
+            app:argType="org.feup.cm.acmeapp.model.User" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -33,6 +36,19 @@
         android:id="@+id/homeFragment"
         android:name="org.feup.cm.acmeapp.Home.HomeFragment"
         android:label="home_fragment"
-        tools:layout="@layout/home_fragment" />
+        tools:layout="@layout/home_fragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_shoppingCartFragment"
+            app:destination="@id/shoppingCartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shoppingCartFragment"
+        android:name="org.feup.cm.acmeapp.ShoppingCart.ShoppingCartFragment"
+        android:label="shopping_cart_fragment"
+        tools:layout="@layout/shopping_cart_fragment" >
+        <action
+            android:id="@+id/action_shoppingCartFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 
 </navigation>
