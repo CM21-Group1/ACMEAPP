@@ -1,30 +1,29 @@
 package org.feup.cm.acmeapp.ShoppingCart;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
-import org.feup.cm.acmeapp.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,9 @@ public class ShoppingCartFragment extends Fragment {
 
     private BottomNavigationView bottomNavigation;
     private ListView list;
+    private List<Product> productList = new ArrayList<>();
+    private CustomArrayAdapter adapter;
+    private int listRowPosition;
 
     public static ShoppingCartFragment newInstance() {
         return new ShoppingCartFragment();
@@ -69,12 +71,14 @@ public class ShoppingCartFragment extends Fragment {
         });
 
         list = root.findViewById(R.id.array_listview);
+        adapter = new CustomArrayAdapter(getContext(), 0, productList);
 
         FloatingActionButton addProduct = root.findViewById(R.id.addProduct);
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //QR Code Scan
+                setProductList();
             }
         });
 
@@ -83,14 +87,30 @@ public class ShoppingCartFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Proceed to Checkout
+                Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
             }
         });
 
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                listRowPosition = position;
+//                Button del = (Button) view.findViewById(R.id.deleteProduct);
+//                del.setOnClickListener(
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                int pos = v.getId();
+//                                System.out.println(pos);
+//                                Product toRemove = adapter.getItem(pos);
+//                                adapter.remove(toRemove);
+//                            }
+//                        });
+//            }
+//        });
+
         //If list is empty
         list.setEmptyView(root.findViewById(R.id.empty_list));
-
-        //Populate list
-        setProductList();
 
         return root;
     }
@@ -102,18 +122,11 @@ public class ShoppingCartFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    private void setProductList(){
-        List<Product> productList= new ArrayList<>();
-
-        Product i= new Product("foo", "10");
-        Product i2= new Product("fooeqw", "20");
-        Product i3= new Product("foeqweo", "30");
-
+    private void setProductList() {
+        Product i = new Product("foo", "10");
         productList.add(i);
-        productList.add(i2);
-        productList.add(i3);
-
-        list.setAdapter(new CustomArrayAdapter(getContext(), 0, productList));
+        adapter.setProductList(productList);
+        list.setAdapter(adapter);
     }
 
     private class CustomArrayAdapter extends ArrayAdapter<Product> {
@@ -133,6 +146,10 @@ public class ShoppingCartFragment extends Fragment {
             ((TextView) row.findViewById(R.id.product_price)).setText(productList.get(position).getPrice());
 
             return (row);
+        }
+
+        public void setProductList(List<Product> productList) {
+            this.productList = productList;
         }
     }
 }

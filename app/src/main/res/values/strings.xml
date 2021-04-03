@@ -13,4 +13,7 @@
     <string name="proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_new_product">Add new product</string>
     <string name="delete_product">delete</string>
+    <string name="cart_subtotal">Cart Subtotal</string>
+    <string name="promotion">Promotion</string>
+    <string name="total">Total</string>
 </resources>

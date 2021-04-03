@@ -4,6 +4,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,9 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel mViewModel;
     private BottomNavigationView bottomNavigation;
+
+    private static final String PREFS_NAME = "preferences";
+    private static final String PREF_USERID ="User ID";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -59,6 +64,12 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+
+        // USER ID RETRIEVED FROM SHAREDPREFERENCES
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        String idValue = settings.getString(PREF_USERID, "");
+        System.out.println(idValue);
 
         return root;
     }

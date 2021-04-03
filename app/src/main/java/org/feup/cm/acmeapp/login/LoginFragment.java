@@ -45,6 +45,7 @@ public class LoginFragment extends Fragment {
     private static final String PREFS_NAME = "preferences";
     private static final String PREF_UNAME = "Username";
     private static final String PREF_PASSWORD = "Password";
+    private static final String PREF_USERID ="User ID";
 
     private final String DefaultUnameValue = "";
     private String UnameValue;
@@ -55,8 +56,7 @@ public class LoginFragment extends Fragment {
     private ProgressBar spinner;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         View root = inflater.inflate(R.layout.login_fragment, container, false);
@@ -201,6 +201,18 @@ public class LoginFragment extends Fragment {
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
+                try {
+                    JSONObject jsonBody = new JSONObject(response);
+
+                    SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    editor.putString(PREF_USERID, jsonBody.get("id").toString());
+                    editor.apply();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Navigation.findNavController(viewTemp).navigate(R.id.action_loginFragment_to_homeFragment);
             }
         }
