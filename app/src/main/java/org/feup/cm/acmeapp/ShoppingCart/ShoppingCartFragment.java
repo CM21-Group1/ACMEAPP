@@ -1,7 +1,13 @@
 package org.feup.cm.acmeapp.ShoppingCart;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,15 +34,20 @@ import org.feup.cm.acmeapp.model.Product;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ShoppingCartFragment extends Fragment {
 
     private ShoppingCartViewModel mViewModel;
+    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     private BottomNavigationView bottomNavigation;
     private ListView list;
     private List<Product> productList = new ArrayList<>();
     private CustomArrayAdapter adapter;
     private int listRowPosition;
+    String message;
+
 
     public static ShoppingCartFragment newInstance() {
         return new ShoppingCartFragment();
@@ -79,6 +90,7 @@ public class ShoppingCartFragment extends Fragment {
             public void onClick(View view) {
                 //QR Code Scan
                 setProductList();
+                scan(true);
             }
         });
 
@@ -113,6 +125,55 @@ public class ShoppingCartFragment extends Fragment {
         list.setEmptyView(root.findViewById(R.id.empty_list));
 
         return root;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putCharSequence("Message", message);
+    }
+
+    public void onRestoreInstanceState(Bundle bundle) {
+        //super.onRestoreInstanceState(bundle);
+        message = bundle.getCharSequence("Message").toString();
+    }
+
+    public void scan(boolean qrcode) {
+        try {
+            Intent intent = new Intent(ACTION_SCAN);
+            intent.putExtra("SCAN_MODE", qrcode ? "QR_CODE_MODE" : "PRODUCT_MODE");
+            startActivityForResult(intent, 0);
+        }
+        catch (ActivityNotFoundException anfe) {
+            //showDialog(this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
+    }
+
+    private static AlertDialog showDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
+        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
+        downloadDialog.setTitle(title);
+        downloadDialog.setMessage(message);
+        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                act.startActivity(intent);
+            }
+        });
+        downloadDialog.setNegativeButton(buttonNo, null);
+        return downloadDialog.show();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = data.getStringExtra("SCAN_RESULT");
+                String format = data.getStringExtra("SCAN_RESULT_FORMAT");
+
+                message = "Format: " + format + "\nMessage: " + contents;
+                System.out.println(message);
+            }
+        }
     }
 
     @Override
