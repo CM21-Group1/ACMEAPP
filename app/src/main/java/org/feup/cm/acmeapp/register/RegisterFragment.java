@@ -1,10 +1,10 @@
 package org.feup.cm.acmeapp.register;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Base64;
+import android.security.KeyPairGeneratorSpec;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import org.feup.cm.acmeapp.Constants;
+import org.feup.cm.acmeapp.PubKey;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
@@ -28,24 +30,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.Key;
-import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.KeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import javax.crypto.Cipher;
+import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
 
     private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/register";
+    //private final String baseUrl = "http://localhost:3000/auth/register";
     private RegisterViewModel mViewModel;
     private String username;
     private String password;
@@ -68,25 +70,6 @@ public class RegisterFragment extends Fragment {
         }
 
         return kp;
-    }
-
-    //Encrypt the client public key with the embedded dev public key so you can send it home.
-    public static String encryptToRSAString(String clearText, String publicKey) {
-        String encryptedBase64 = "";
-        try {
-            KeyFactory keyFac = KeyFactory.getInstance("RSA");
-            KeySpec keySpec = new X509EncodedKeySpec(Base64.decode(publicKey.trim().getBytes(), Base64.DEFAULT));
-            Key key = keyFac.generatePublic(keySpec);
-            // get an RSA cipher object and print the provider
-            final Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
-            // encrypt the plain text using the public key
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encryptedBytes = cipher.doFinal(clearText.getBytes("UTF-8"));
-            encryptedBase64 = new String(Base64.encode(encryptedBytes, Base64.DEFAULT));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return encryptedBase64.replaceAll("(\\r|\\n)", "");
     }
 
     @Override
@@ -126,6 +109,7 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getContext(), "Payment_card empty", Toast.LENGTH_LONG).show();
                 } else {
                     viewTemp = view;
+                    generateAndStoreKeys();
                     new APIRequest().execute();
                 }
             }
@@ -139,24 +123,24 @@ public class RegisterFragment extends Fragment {
 
         System.out.println(publicKey);
         System.out.println(privateKey);
-
-        KeyPairGenerator kpg = null;
-        try {
-            kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
-            kpg.initialize(new KeyGenParameterSpec.Builder("alias", KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY).setDigests(KeyProperties.DIGEST_SHA256,
-                    KeyProperties.DIGEST_SHA512).build());
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        }
-
-        assert kpg != null;
-        KeyPair kp = kpg.generateKeyPair();
-
-        PublicKey publicKey2 = clientKeys.getPublic();
-        PrivateKey privateKey2 = clientKeys.getPrivate();
-
-        System.out.println(publicKey2);
-        System.out.println(privateKey2);
+//
+//        KeyPairGenerator kpg = null;
+//        try {
+//            kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
+//            kpg.initialize(new KeyGenParameterSpec.Builder("alias", KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY).setDigests(KeyProperties.DIGEST_SHA256,
+//                    KeyProperties.DIGEST_SHA512).build());
+//        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
+//            e.printStackTrace();
+//        }
+//
+//        assert kpg != null;
+//        KeyPair kp = kpg.generateKeyPair();
+//
+//        PublicKey publicKey2 = clientKeys.getPublic();
+//        PrivateKey privateKey2 = clientKeys.getPrivate();
+//
+//        System.out.println(publicKey2);
+//        System.out.println(privateKey2);
 
 //   -----------------------------------------------------------------------------------------------
 
@@ -170,6 +154,46 @@ public class RegisterFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    private void generateAndStoreKeys() {
+        try {
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+            if (entry == null) {
+                Calendar start = new GregorianCalendar();
+                Calendar end = new GregorianCalendar();
+                end.add(Calendar.YEAR, 20);
+                KeyPairGenerator kgen = KeyPairGenerator.getInstance(Constants.KEY_ALGO, Constants.ANDROID_KEYSTORE);
+                AlgorithmParameterSpec spec = new KeyPairGeneratorSpec.Builder(getContext())
+                        .setKeySize(Constants.KEY_SIZE)
+                        .setAlias(Constants.keyname)
+                        .setSubject(new X500Principal("CN=" + Constants.keyname))
+                        .setSerialNumber(BigInteger.valueOf(12121212))
+                        .setStartDate(start.getTime())
+                        .setEndDate(end.getTime())
+                        .build();
+                kgen.initialize(spec);
+                KeyPair kp = kgen.generateKeyPair();
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    PubKey getPubKey() {
+        PubKey pkey = new PubKey();
+        try {
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+            PublicKey pub = ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey();
+            pkey.modulus = ((RSAPublicKey) pub).getModulus().toByteArray();
+            pkey.exponent = ((RSAPublicKey) pub).getPublicExponent().toByteArray();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return pkey;
+    }
 
     private class APIRequest extends AsyncTask<Void, Void, String> {
 
@@ -179,12 +203,17 @@ public class RegisterFragment extends Fragment {
             JSONObject jsonBody;
             String requestBody;
             HttpURLConnection urlConnection = null;
+            String publicKey = getPubKey().modulus.toString();
+
             try {
+
                 jsonBody = new JSONObject();
                 jsonBody.put("username", username);
                 jsonBody.put("password", password);
                 jsonBody.put("name", name);
                 jsonBody.put("payment_card", payment_card);
+                jsonBody.put("publicKey", publicKey);
+
                 requestBody = Utils.buildPostParameters(jsonBody);
                 urlConnection = (HttpURLConnection) Utils.makeRequest("POST", baseUrl, null, "application/json", requestBody);
                 InputStream inputStream;
@@ -218,12 +247,20 @@ public class RegisterFragment extends Fragment {
             if (response.equals("{\"message\":\"Username already registered\"}")) {
                 Toast.makeText(getContext(), "Username already registered.", Toast.LENGTH_LONG).show();
             } else {
-//                try {
-//                    JSONObject jsonBody = new JSONObject(response);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    JSONObject jsonBody = new JSONObject(response);
+
+                    SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    editor.putString(Constants.PREF_USERID, jsonBody.get("id").toString());
+                    editor.putString(Constants.PREF_PUBLICKEYSP, jsonBody.get("superPKey").toString());
+                    editor.apply();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 Navigation.findNavController(viewTemp).navigate(R.id.action_registerFragment_to_homeFragment);
             }
         }

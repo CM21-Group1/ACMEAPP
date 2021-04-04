@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
@@ -41,11 +42,6 @@ public class LoginFragment extends Fragment {
     private EditText username_edittext;
     private EditText password_edittext;
     private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/login";
-
-    private static final String PREFS_NAME = "preferences";
-    private static final String PREF_UNAME = "Username";
-    private static final String PREF_PASSWORD = "Password";
-    private static final String PREF_USERID ="User ID";
 
     private final String DefaultUnameValue = "";
     private String UnameValue;
@@ -126,23 +122,23 @@ public class LoginFragment extends Fragment {
     }
 
     private void savePreferences() {
-        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
         UnameValue = username_edittext.getText().toString();
         PasswordValue = password_edittext.getText().toString();
 
-        editor.putString(PREF_UNAME, UnameValue);
-        editor.putString(PREF_PASSWORD, PasswordValue);
+        editor.putString(Constants.PREF_UNAME, UnameValue);
+        editor.putString(Constants.PREF_PASSWORD, PasswordValue);
         editor.apply();
     }
 
     private void loadPreferences() {
         if(username_edittext != null && password_edittext != null){
-            SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
 
-            UnameValue = settings.getString(PREF_UNAME, DefaultUnameValue);
-            PasswordValue = settings.getString(PREF_PASSWORD, DefaultPasswordValue);
+            UnameValue = settings.getString(Constants.PREF_UNAME, DefaultUnameValue);
+            PasswordValue = settings.getString(Constants.PREF_PASSWORD, DefaultPasswordValue);
             username_edittext.setText(UnameValue);
             password_edittext.setText(PasswordValue);
         }
@@ -160,6 +156,7 @@ public class LoginFragment extends Fragment {
                 jsonBody = new JSONObject();
                 jsonBody.put("username", username);
                 jsonBody.put("password", password);
+
                 requestBody = Utils.buildPostParameters(jsonBody);
                 urlConnection = (HttpURLConnection) Utils.makeRequest("POST", baseUrl, null, "application/json", requestBody);
                 InputStream inputStream;
@@ -203,11 +200,12 @@ public class LoginFragment extends Fragment {
 //                }
                 try {
                     JSONObject jsonBody = new JSONObject(response);
-
-                    SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                    System.out.println(jsonBody);
+                    SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
 
-                    editor.putString(PREF_USERID, jsonBody.get("id").toString());
+                    editor.putString(Constants.PREF_USERID, jsonBody.get("id").toString());
+                    editor.putString(Constants.PREF_PUBLICKEYSP, jsonBody.get("superPKey").toString());
                     editor.apply();
 
                 } catch (JSONException e) {
