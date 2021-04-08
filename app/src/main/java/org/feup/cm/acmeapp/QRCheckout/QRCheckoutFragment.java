@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -18,8 +19,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.SharedViewModel;
+import org.feup.cm.acmeapp.model.Product;
+import org.feup.cm.acmeapp.model.Purchase;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -27,8 +35,10 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 
 public class QRCheckoutFragment extends Fragment {
-
+    private SharedViewModel sharedViewModel;
     private QRCheckoutViewModel mViewModel;
+    private List<Product> productList = new ArrayList<>();
+    private Purchase purchase;
     ImageView qrCodeIv;
 
     public final static int IMAGE_SIZE=900;
@@ -43,6 +53,10 @@ public class QRCheckoutFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(QRCheckoutViewModel.class);
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+
+        productList = sharedViewModel.getProductList();
+        purchase = sharedViewModel.getPurchase();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -65,10 +79,7 @@ public class QRCheckoutFragment extends Fragment {
             }
         });
 
-        //TODO
-        // Convert the string value of the purchase to the QR
-        new Thread(new convertToQR("TEST")).start();
-
+        new Thread(new convertToQR(purchase.toString())).start();
         return root;
     }
 

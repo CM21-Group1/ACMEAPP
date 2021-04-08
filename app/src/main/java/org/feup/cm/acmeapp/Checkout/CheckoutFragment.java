@@ -3,6 +3,8 @@ package org.feup.cm.acmeapp.Checkout;
 import androidx.activity.OnBackPressedCallback;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
+import org.feup.cm.acmeapp.model.Purchase;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -28,6 +31,10 @@ public class CheckoutFragment extends Fragment{
     private SharedViewModel sharedViewModel;
     private CheckoutViewModel mViewModel;
     private List<Product> productList;
+    private String userId;
+
+    private static final String PREFS_NAME = "preferences";
+    private static final String PREF_USERID ="User ID";
 
     private double totalAmount = 0;
 
@@ -42,6 +49,10 @@ public class CheckoutFragment extends Fragment{
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
+
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        userId = settings.getString(PREF_USERID, "");
 
         for (Product product: productList) {
             totalAmount += product.getPrice();
@@ -64,6 +75,7 @@ public class CheckoutFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //QR Code Scan
+                sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount));
                 Navigation.findNavController(root).navigate(R.id.action_checkoutFragment_to_QRCheckoutFragment);
             }
         });

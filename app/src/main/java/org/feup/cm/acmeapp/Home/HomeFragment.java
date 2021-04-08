@@ -26,7 +26,9 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.feup.cm.acmeapp.CustomDialog;
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.Purchase;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,8 +71,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.home_fragment, container, false);
@@ -117,7 +118,9 @@ public class HomeFragment extends Fragment {
                 //TODO
                 // Create a dialog for each purchase clicked. Dialog with all products listed
                 Purchase purchaseClicked = purchaseList.get(position);
-                System.out.println(purchaseClicked.getDate());
+
+                CustomDialog cdd = new CustomDialog(getActivity(), purchaseClicked.getProducts());
+                cdd.show();
             }
         });
 
@@ -210,8 +213,20 @@ public class HomeFragment extends Fragment {
                     purchaseTemp.setDate(date);
                     purchaseTemp.setTotalPrice(Double.parseDouble(purchaseJson.get("totalPrice").toString()));
 
-                    purchaseList.add(purchaseTemp);
+                    List<Product> productsList = new ArrayList<>();
+                    JSONArray products = (JSONArray) purchaseJson.get("products");
+                    for (int j = 0; j < products.length(); j++)
+                    {
+                        String _id = products.getJSONObject(j).getString("_id");
+                        String name = products.getJSONObject(j).getString("name");
+                        String price = products.getJSONObject(j).getString("price");
+                        Product product = new Product(_id, name, Double.parseDouble(price));
 
+                        productsList.add(product);
+                    }
+
+                    purchaseTemp.setProducts(productsList);
+                    purchaseList.add(purchaseTemp);
                 }
 
                 //Order list by date
@@ -224,7 +239,6 @@ public class HomeFragment extends Fragment {
 
                 adapter.setProductList(purchaseList);
                 list.setAdapter(adapter);
-
 
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();
