@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,12 +21,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
 
 import java.util.ArrayList;
@@ -36,7 +36,8 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ShoppingCartFragment extends Fragment {
+public class ShoppingCartFragment extends Fragment{
+    private SharedViewModel sharedViewModel;
 
     private ShoppingCartViewModel mViewModel;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
@@ -45,7 +46,6 @@ public class ShoppingCartFragment extends Fragment {
     private ListView list;
     private List<Product> productList = new ArrayList<>();
     private CustomArrayAdapter adapter;
-    private int listRowPosition;
     String message;
 
 
@@ -54,10 +54,10 @@ public class ShoppingCartFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(ShoppingCartViewModel.class);
         View root = inflater.inflate(R.layout.shopping_cart_fragment, container, false);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.shopping_cart);
@@ -99,6 +99,7 @@ public class ShoppingCartFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Proceed to Checkout
+                sharedViewModel.setProductList(productList);
                 Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
             }
         });
@@ -184,7 +185,7 @@ public class ShoppingCartFragment extends Fragment {
     }
 
     private void setProductList() {
-        Product i = new Product("foo", "10");
+        Product i = new Product("ID", "foo", 10);
         productList.add(i);
         adapter.setProductList(productList);
         list.setAdapter(adapter);
@@ -204,7 +205,7 @@ public class ShoppingCartFragment extends Fragment {
             View row = getLayoutInflater().inflate(R.layout.row, parent, false);
 
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
-            ((TextView) row.findViewById(R.id.product_price)).setText(productList.get(position).getPrice());
+            ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
 
             return (row);
         }

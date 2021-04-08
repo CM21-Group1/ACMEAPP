@@ -114,6 +114,8 @@ public class HomeFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO
+                // Create a dialog for each purchase clicked. Dialog with all products listed
                 Purchase purchaseClicked = purchaseList.get(position);
                 System.out.println(purchaseClicked.getDate());
             }
