@@ -34,12 +34,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_order"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
+    <ListView
+        android:id="@+id/purchases_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </ListView>
 
     <include
         layout="@layout/view_row"

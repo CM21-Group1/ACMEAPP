@@ -6,7 +6,7 @@
         android:icon="@drawable/icons_home"
         android:title="@string/home"/>
     <item
-        android:id="@+id/unknown"
+        android:id="@+id/vouchers"
         android:enabled="true"
         android:icon="@drawable/icons_history"
         android:title="@string/not_defined"/>

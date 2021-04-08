@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_homeFragment_to_shoppingCartFragment"
             app:destination="@id/shoppingCartFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_vouchersFragment"
+            app:destination="@id/vouchersFragment" />
     </fragment>
     <fragment
         android:id="@+id/shoppingCartFragment"
@@ -52,6 +55,9 @@
         <action
             android:id="@+id/action_shoppingCartFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/action_shoppingCartFragment_to_vouchersFragment"
+            app:destination="@id/vouchersFragment" />
     </fragment>
     <fragment
         android:id="@+id/checkoutFragment"
@@ -61,6 +67,17 @@
         <action
             android:id="@+id/action_checkoutFragment_to_shoppingCartFragment"
             app:destination="@id/shoppingCartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vouchersFragment"
+        android:name="org.feup.cm.acmeapp.Vouchers.VouchersFragment"
+        android:label="VouchersFragment" >
+        <action
+            android:id="@+id/action_vouchersFragment_to_shoppingCartFragment"
+            app:destination="@id/shoppingCartFragment" />
+        <action
+            android:id="@+id/action_vouchersFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 
 </navigation>

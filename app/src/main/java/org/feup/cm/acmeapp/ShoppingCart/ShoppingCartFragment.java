@@ -70,8 +70,8 @@ public class ShoppingCartFragment extends Fragment {
                     case R.id.home:
                         Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_homeFragment);
                         return true;
-                    case R.id.unknown:
-                        System.out.println("UNKNOWN FRAGMENT");
+                    case R.id.vouchers:
+                        Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_vouchersFragment);
                         return true;
                     case R.id.shopping_cart:
                         System.out.println("SHOPPING CART FRAGMENT");

@@ -16,4 +16,5 @@
     <string name="cart_subtotal">Cart Subtotal</string>
     <string name="promotion">Promotion</string>
     <string name="total">Total</string>
+    <string name="unknown_price">Unknown Price</string>
 </resources>
