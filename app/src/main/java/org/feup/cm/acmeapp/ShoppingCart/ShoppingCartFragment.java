@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
+import org.feup.cm.acmeapp.model.ProductDecrypter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +47,6 @@ public class ShoppingCartFragment extends Fragment{
     private ListView list;
     private List<Product> productList = new ArrayList<>();
     private CustomArrayAdapter adapter;
-    String message;
-
 
     public static ShoppingCartFragment newInstance() {
         return new ShoppingCartFragment();
@@ -89,7 +88,6 @@ public class ShoppingCartFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //QR Code Scan
-                setProductList();
                 scan(true);
             }
         });
@@ -131,12 +129,12 @@ public class ShoppingCartFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putCharSequence("Message", message);
+        //bundle.putCharSequence("Message", message); erro
     }
 
     public void onRestoreInstanceState(Bundle bundle) {
         //super.onRestoreInstanceState(bundle);
-        message = bundle.getCharSequence("Message").toString();
+        //message = bundle.getCharSequence("Message").toString(); erro
     }
 
     public void scan(boolean qrcode) {
@@ -171,8 +169,11 @@ public class ShoppingCartFragment extends Fragment{
                 String contents = data.getStringExtra("SCAN_RESULT");
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
 
-                message = "Format: " + format + "\nMessage: " + contents;
-                System.out.println(message);
+                System.out.println("Format: " + format + "\nMessage: " + contents);
+
+                ProductDecrypter productDecrypter = new ProductDecrypter("falta", contents);
+                productList.add(productDecrypter.getProduct());
+                updateProductList();
             }
         }
     }
@@ -181,12 +182,9 @@ public class ShoppingCartFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ShoppingCartViewModel.class);
-        // TODO: Use the ViewModel
     }
 
-    private void setProductList() {
-        Product i = new Product("ID", "foo", 10);
-        productList.add(i);
+    private void updateProductList() {
         adapter.setProductList(productList);
         list.setAdapter(adapter);
     }
