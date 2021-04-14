@@ -19,34 +19,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
-                android:text="@string/cart_subtotal" />
+                android:text="Number Of Products" />
 
             <TextView
-                android:id="@+id/subTotalPrice"
+                android:id="@+id/numberOfProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="50,00€" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:text="@string/promotion" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="0€" />
+                android:text="50" />
         </TableRow>
 
         <TableRow
@@ -67,21 +47,31 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="50,00€" />
+
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:gravity="center">
 
-
-            <Spinner
-                android:id="@+id/vouchers"
+            <TextView
+                android:id="@+id/totalPriceWithVoucherLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:tooltipText="Promotion Code"/>
+                android:layout_marginRight="20dp"
+                android:text="With Discount" />
+
+            <TextView
+                android:id="@+id/totalPriceWithVoucher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="50,00€" />
+
         </TableRow>
+
 
         <TableRow
             android:layout_width="match_parent"
@@ -91,10 +81,10 @@
 
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/voucher_dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Continue Buying" />
+                android:text="Add voucher" />
 
         </TableRow>
 

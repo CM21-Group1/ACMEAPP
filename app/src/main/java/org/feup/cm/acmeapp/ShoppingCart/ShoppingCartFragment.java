@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,11 +84,21 @@ public class ShoppingCartFragment extends Fragment{
         list = root.findViewById(R.id.array_listview);
         adapter = new CustomArrayAdapter(getContext(), 0, productList);
 
+        if(sharedViewModel.getProductList() != null){
+            productList = sharedViewModel.getProductList();
+            updateProductList();
+        }
+
         FloatingActionButton addProduct = root.findViewById(R.id.addProduct);
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //QR Code Scan
+                //TEST
+//                    Product productTemp = new Product("teste", "Product x", 10);
+//                    productList.add(productTemp);
+//                    updateProductList();
+                //TEST
                 scan(true);
             }
         });
@@ -97,28 +108,14 @@ public class ShoppingCartFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //Proceed to Checkout
-                sharedViewModel.setProductList(productList);
-                Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
+                if(productList.isEmpty()){
+                    Toast.makeText(getContext(), "No products added to the cart", Toast.LENGTH_LONG).show();
+                }else{
+                    sharedViewModel.setProductList(productList);
+                    Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
+                }
             }
         });
-
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                listRowPosition = position;
-//                Button del = (Button) view.findViewById(R.id.deleteProduct);
-//                del.setOnClickListener(
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                int pos = v.getId();
-//                                System.out.println(pos);
-//                                Product toRemove = adapter.getItem(pos);
-//                                adapter.remove(toRemove);
-//                            }
-//                        });
-//            }
-//        });
 
         //If list is empty
         list.setEmptyView(root.findViewById(R.id.empty_list));

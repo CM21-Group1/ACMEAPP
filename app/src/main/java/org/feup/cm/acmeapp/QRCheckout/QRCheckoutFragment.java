@@ -56,6 +56,7 @@ public class QRCheckoutFragment extends Fragment {
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
+        sharedViewModel.setProductList(null);
         purchase = sharedViewModel.getPurchase();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {

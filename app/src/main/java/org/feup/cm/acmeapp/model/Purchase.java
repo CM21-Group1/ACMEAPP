@@ -9,6 +9,8 @@ public class Purchase {
     private double totalPrice;
     private Date date;
 
+    private Voucher voucher;
+
     public Purchase() {
     }
 
@@ -17,6 +19,14 @@ public class Purchase {
         this.products = products;
         this.totalPrice = totalPrice;
     }
+
+    public Purchase(String userId, List<Product> products, double totalPrice, Voucher voucher) {
+        this.userId = userId;
+        this.products = products;
+        this.totalPrice = totalPrice;
+        this.voucher = voucher;
+    }
+
 
     public String getUserId() {
         return userId;
@@ -52,10 +62,21 @@ public class Purchase {
 
     @Override
     public String toString() {
+
+        if(voucher != null){
+            return "{" +
+                    "\"userId\": \"" + userId + '\"' +
+                    ", \"products\": " + products +
+                    ", \"totalPrice\": " + totalPrice +
+                    ", \"voucherId\": " + voucher +
+                    '}';
+        }
+
         return "{" +
                 "\"userId\": \"" + userId + '\"' +
                 ", \"products\": " + products +
                 ", \"totalPrice\": " + totalPrice +
                 '}';
+
     }
 }

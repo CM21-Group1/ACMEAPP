@@ -31,9 +31,10 @@
 
             <TextView
                 android:id="@+id/empty_list"
+                android:gravity="center_vertical|center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Empty List" />
+                android:layout_height="match_parent"
+                android:text="@string/no_vouchers" />
 
         </LinearLayout>
     </FrameLayout>

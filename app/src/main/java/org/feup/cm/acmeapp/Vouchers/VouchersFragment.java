@@ -11,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Voucher;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +64,8 @@ public class VouchersFragment extends Fragment {
     private CustomArrayAdapter adapter;
     private String userId;
 
+    private SharedViewModel sharedViewModel;
+
     public static VouchersFragment newInstance() {
         return new VouchersFragment();
     }
@@ -72,6 +76,7 @@ public class VouchersFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(VouchersViewModel.class);
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.vouchers);
@@ -206,6 +211,7 @@ public class VouchersFragment extends Fragment {
                     }
                 });
 
+                sharedViewModel.setVoucherList(voucherList);
                 adapter.setVouchersList(voucherList);
                 list.setAdapter(adapter);
 
