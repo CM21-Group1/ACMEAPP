@@ -32,6 +32,11 @@ import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.ProductDecrypter;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +176,20 @@ public class ShoppingCartFragment extends Fragment{
 
                 System.out.println("Format: " + format + "\nMessage: " + contents);
 
-                ProductDecrypter productDecrypter = new ProductDecrypter("falta", contents);
+                ProductDecrypter productDecrypter = null;
+                try {
+                    productDecrypter = new ProductDecrypter("falta", contents);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (SignatureException e) {
+                    e.printStackTrace();
+                }
                 productList.add(productDecrypter.getProduct());
                 updateProductList();
             }
