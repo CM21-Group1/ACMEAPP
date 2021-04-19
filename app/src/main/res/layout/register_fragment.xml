@@ -6,7 +6,7 @@
     android:layout_marginHorizontal="50dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".register.RegisterFragment">
+    tools:context=".Fragments.RegisterFragment">
 
 
     <EditText

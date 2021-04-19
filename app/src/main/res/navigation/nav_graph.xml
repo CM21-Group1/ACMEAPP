@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
 
     <fragment android:id="@+id/loginFragment"
-        android:name="org.feup.cm.acmeapp.login.LoginFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.LoginFragment"
         android:label="@string/login"
         tools:layout="@layout/login_fragment">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="org.feup.cm.acmeapp.register.RegisterFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.RegisterFragment"
         android:label="register_fragment"
         tools:layout="@layout/register_fragment" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="org.feup.cm.acmeapp.Home.HomeFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.HomeFragment"
         android:label="home_fragment"
         tools:layout="@layout/home_fragment" >
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/shoppingCartFragment"
-        android:name="org.feup.cm.acmeapp.ShoppingCart.ShoppingCartFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.ShoppingCartFragment"
         android:label="shopping_cart_fragment"
         tools:layout="@layout/shopping_cart_fragment" >
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/checkoutFragment"
-        android:name="org.feup.cm.acmeapp.Checkout.CheckoutFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.CheckoutFragment"
         android:label="checkout_fragment"
         tools:layout="@layout/checkout_fragment" >
         <action
@@ -73,7 +73,7 @@
     </fragment>
     <fragment
         android:id="@+id/vouchersFragment"
-        android:name="org.feup.cm.acmeapp.Vouchers.VouchersFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.VouchersFragment"
         android:label="VouchersFragment" >
         <action
             android:id="@+id/action_vouchersFragment_to_shoppingCartFragment"
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/QRCheckoutFragment"
-        android:name="org.feup.cm.acmeapp.QRCheckout.QRCheckoutFragment"
+        android:name="org.feup.cm.acmeapp.Fragments.QRCheckoutFragment"
         android:label="QRCheckoutFragment" >
         <action
             android:id="@+id/action_QRCheckoutFragment_to_homeFragment"

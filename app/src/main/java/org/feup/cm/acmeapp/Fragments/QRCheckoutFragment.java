@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.QRCheckout;
+package org.feup.cm.acmeapp.Fragments;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,24 +36,18 @@ import com.google.zxing.common.BitMatrix;
 
 public class QRCheckoutFragment extends Fragment {
     private SharedViewModel sharedViewModel;
-    private QRCheckoutViewModel mViewModel;
     private List<Product> productList = new ArrayList<>();
     private Purchase purchase;
     ImageView qrCodeIv;
 
     public final static int IMAGE_SIZE=900;
 
-    public static QRCheckoutFragment newInstance() {
-        return new QRCheckoutFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(QRCheckoutViewModel.class);
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
         sharedViewModel.setProductList(null);
@@ -87,8 +81,6 @@ public class QRCheckoutFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(QRCheckoutViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     class convertToQR implements Runnable {

@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.Home;
+package org.feup.cm.acmeapp.Fragments;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -53,7 +53,6 @@ import java.util.TimeZone;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel mViewModel;
     private BottomNavigationView bottomNavigation;
 
     private static final String PREFS_NAME = "preferences";
@@ -66,14 +65,10 @@ public class HomeFragment extends Fragment {
     private CustomArrayAdapter adapter;
     private String userId;
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.home_fragment, container, false);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
@@ -130,8 +125,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private class CustomArrayAdapter extends ArrayAdapter<Purchase> {

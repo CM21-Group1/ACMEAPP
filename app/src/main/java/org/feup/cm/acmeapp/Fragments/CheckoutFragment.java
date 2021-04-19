@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.Checkout;
+package org.feup.cm.acmeapp.Fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -51,7 +51,6 @@ public class CheckoutFragment extends Fragment {
     private static final String PREF_USERID = "User ID";
     private final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/vouchers/";
     private SharedViewModel sharedViewModel;
-    private CheckoutViewModel mViewModel;
     private List<Product> productList;
     private String userId;
     private double totalAmount = 0;
@@ -67,15 +66,11 @@ public class CheckoutFragment extends Fragment {
     private final double percentage = 0.15;
     private double valueToSubtract = 0;
 
-    public static CheckoutFragment newInstance() {
-        return new CheckoutFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(CheckoutViewModel.class);
         View root = inflater.inflate(R.layout.checkout_fragment, container, false);
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
 
@@ -178,8 +173,6 @@ public class CheckoutFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CheckoutViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private class APIRequest extends AsyncTask<Void, Void, String> {

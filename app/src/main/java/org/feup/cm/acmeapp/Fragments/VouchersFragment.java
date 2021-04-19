@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.Vouchers;
+package org.feup.cm.acmeapp.Fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Voucher;
@@ -51,32 +52,19 @@ import java.util.TimeZone;
 
 public class VouchersFragment extends Fragment {
 
-    private VouchersViewModel mViewModel;
     private BottomNavigationView bottomNavigation;
-
-    private static final String PREFS_NAME = "preferences";
-    private static final String PREF_USERID ="User ID";
-
-    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/vouchers/";
-
     private ListView list;
     private List<Voucher> voucherList = new ArrayList<>();
     private CustomArrayAdapter adapter;
     private String userId;
-
     private SharedViewModel sharedViewModel;
-
-    public static VouchersFragment newInstance() {
-        return new VouchersFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(VouchersViewModel.class);
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.vouchers);
@@ -101,9 +89,9 @@ public class VouchersFragment extends Fragment {
         });
 
         // USER ID RETRIEVED FROM SHAREDPREFERENCES
-        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
 
-        userId = settings.getString(PREF_USERID, "");
+        userId = settings.getString(Constants.PREF_USERID, "");
         //System.out.println(userId);
 
         list = root.findViewById(R.id.vouchers_listview);
@@ -118,8 +106,6 @@ public class VouchersFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(VouchersViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private class CustomArrayAdapter extends ArrayAdapter<Voucher> {
@@ -155,7 +141,7 @@ public class VouchersFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(baseUrl + userId);
+                URL url = new URL(Constants.baseUrl + userId);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream;
 

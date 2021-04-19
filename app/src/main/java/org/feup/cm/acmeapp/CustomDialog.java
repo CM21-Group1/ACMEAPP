@@ -3,7 +3,6 @@ package org.feup.cm.acmeapp;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyboardShortcutGroup;
 import android.view.Menu;
@@ -11,25 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.common.BitMatrix;
-
-import org.feup.cm.acmeapp.ShoppingCart.ShoppingCartFragment;
 import org.feup.cm.acmeapp.model.Product;
-import org.feup.cm.acmeapp.model.Purchase;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class CustomDialog extends Dialog implements android.view.View.OnClickListener{

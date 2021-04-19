@@ -11,4 +11,5 @@ public class Constants {
     public static final String PREF_PASSWORD = "Password";
     public static final String PREF_USERID ="User ID";
     public static final String PREF_PUBLICKEYSP ="PublicKey Supermarket";
+    public static final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/vouchers/";
 }

@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.ShoppingCart;
+package org.feup.cm.acmeapp.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -40,8 +40,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class ShoppingCartFragment extends Fragment{
     private SharedViewModel sharedViewModel;
-
-    private ShoppingCartViewModel mViewModel;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     private BottomNavigationView bottomNavigation;
@@ -55,9 +53,8 @@ public class ShoppingCartFragment extends Fragment{
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(ShoppingCartViewModel.class);
         View root = inflater.inflate(R.layout.shopping_cart_fragment, container, false);
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.shopping_cart);
@@ -94,11 +91,6 @@ public class ShoppingCartFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //QR Code Scan
-                //TEST
-//                    Product productTemp = new Product("teste", "Product x", 10);
-//                    productList.add(productTemp);
-//                    updateProductList();
-                //TEST
                 scan(true);
             }
         });
@@ -178,7 +170,6 @@ public class ShoppingCartFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ShoppingCartViewModel.class);
     }
 
     private void updateProductList() {

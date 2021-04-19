@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.login;
+package org.feup.cm.acmeapp.Fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -35,7 +35,6 @@ import java.net.HttpURLConnection;
 
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel mViewModel;
     private String username;
     private String password;
     private View viewTemp;
@@ -54,7 +53,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         View root = inflater.inflate(R.layout.login_fragment, container, false);
 
         final Button buttonLogin = root.findViewById(R.id.login_btn);
@@ -105,8 +103,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override

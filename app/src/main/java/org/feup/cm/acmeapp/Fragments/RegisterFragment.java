@@ -1,4 +1,4 @@
-package org.feup.cm.acmeapp.register;
+package org.feup.cm.acmeapp.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,16 +48,11 @@ public class RegisterFragment extends Fragment {
 
     private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/register";
     //private final String baseUrl = "http://localhost:3000/auth/register";
-    private RegisterViewModel mViewModel;
     private String username;
     private String password;
     private String name;
     private String payment_card;
     private View viewTemp;
-
-    public static RegisterFragment newInstance() {
-        return new RegisterFragment();
-    }
 
     public static KeyPair getKeyPair() {
         KeyPair kp = null;
@@ -75,7 +70,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         View root = inflater.inflate(R.layout.register_fragment, container, false);
 
         final Button buttonSignUp = root.findViewById(R.id.btn_register);
@@ -150,8 +144,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private void generateAndStoreKeys() {

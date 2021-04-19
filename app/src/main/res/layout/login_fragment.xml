@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="70dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".login.LoginFragment">
+    tools:context=".Fragments.LoginFragment">
 
     <ImageView
         android:layout_width="wrap_content"
