@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
@@ -39,8 +40,6 @@ public class QRCheckoutFragment extends Fragment {
     private List<Product> productList = new ArrayList<>();
     private Purchase purchase;
     ImageView qrCodeIv;
-
-    public final static int IMAGE_SIZE=900;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -104,7 +103,7 @@ public class QRCheckoutFragment extends Fragment {
         Hashtable<EncodeHintType, String> hints = new Hashtable<>();
         hints.put(EncodeHintType.CHARACTER_SET, "ISO_SET");
         try {
-            result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, IMAGE_SIZE, IMAGE_SIZE, null);
+            result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, Constants.IMAGE_SIZE, Constants.IMAGE_SIZE, null);
         }
         catch (Exception exc) {
             System.out.println(exc.getMessage());

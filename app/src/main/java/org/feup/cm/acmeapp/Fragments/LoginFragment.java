@@ -40,7 +40,7 @@ public class LoginFragment extends Fragment {
     private View viewTemp;
     private EditText username_edittext;
     private EditText password_edittext;
-    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/login";
+
 
     private final String DefaultUnameValue = "";
     private String UnameValue;
@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment {
                 jsonBody.put("password", password);
 
                 requestBody = Utils.buildPostParameters(jsonBody);
-                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", baseUrl, null, "application/json", requestBody);
+                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", Constants.baseUrl + Constants.loginUrl, null, "application/json", requestBody);
                 InputStream inputStream;
 
                 if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {

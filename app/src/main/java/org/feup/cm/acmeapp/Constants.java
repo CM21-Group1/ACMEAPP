@@ -11,6 +11,13 @@ public class Constants {
     public static final String PREF_PASSWORD = "Password";
     public static final String PREF_USERID ="User ID";
     public static final String PREF_PUBLICKEYSP ="PublicKey Supermarket";
-    public static final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/vouchers/";
+    public static final String baseUrl = "https://acmeapi-cm.herokuapp.com";
+    public static final String vouchersUrl = "/sp/vouchers/";
+    public static final String registerUrl = "/auth/register";
+    public static final String loginUrl = "/auth/login";
+    public static final String purchaseUrl = "/sp/purchase/";
+    public static final String publicKeyUrl = "/sp/getpublickey";
     public static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    public static final int IMAGE_SIZE=900;
+
 }

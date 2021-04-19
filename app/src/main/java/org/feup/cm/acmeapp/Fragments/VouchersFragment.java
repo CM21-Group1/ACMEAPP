@@ -98,7 +98,7 @@ public class VouchersFragment extends Fragment {
         adapter = new CustomArrayAdapter(getContext(), 0, voucherList);
 
         // Get all purchases from customer from user id
-        new APIRequest().execute();
+        new APIRequestGetVouchers().execute();
 
         return root;
     }
@@ -134,14 +134,14 @@ public class VouchersFragment extends Fragment {
         }
     }
 
-    private class APIRequest extends AsyncTask<Void, Void, String> {
+    private class APIRequestGetVouchers extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(Constants.baseUrl + userId);
+                URL url = new URL(Constants.baseUrl + Constants.vouchersUrl + userId);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream;
 

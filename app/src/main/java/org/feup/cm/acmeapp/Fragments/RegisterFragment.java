@@ -45,9 +45,6 @@ import java.util.GregorianCalendar;
 import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
-
-    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/auth/register";
-    //private final String baseUrl = "http://localhost:3000/auth/register";
     private String username;
     private String password;
     private String name;
@@ -207,7 +204,7 @@ public class RegisterFragment extends Fragment {
                 jsonBody.put("publicKey", publicKey);
 
                 requestBody = Utils.buildPostParameters(jsonBody);
-                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", baseUrl, null, "application/json", requestBody);
+                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", Constants.baseUrl + Constants.registerUrl, null, "application/json", requestBody);
                 InputStream inputStream;
 
                 if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {

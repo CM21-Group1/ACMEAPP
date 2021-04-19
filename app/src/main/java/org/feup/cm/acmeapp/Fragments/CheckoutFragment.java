@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
@@ -47,9 +48,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class CheckoutFragment extends Fragment {
-    private static final String PREFS_NAME = "preferences";
-    private static final String PREF_USERID = "User ID";
-    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/vouchers/";
+
     private SharedViewModel sharedViewModel;
     private List<Product> productList;
     private String userId;
@@ -138,9 +137,9 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
 
-        userId = settings.getString(PREF_USERID, "");
+        userId = settings.getString(Constants.PREF_USERID, "");
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -182,7 +181,7 @@ public class CheckoutFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(baseUrl + userId);
+                URL url = new URL(Constants.baseUrl + userId);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream;
 

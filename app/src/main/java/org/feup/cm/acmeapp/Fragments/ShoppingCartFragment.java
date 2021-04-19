@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,9 +34,26 @@ import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.ProductDecrypter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -108,6 +126,9 @@ public class ShoppingCartFragment extends Fragment{
         //If list is empty
         list.setEmptyView(root.findViewById(R.id.empty_list));
 
+        //Get the public key from supermarket
+        new APIRequestPublicKey().execute();
+
         return root;
     }
 
@@ -152,11 +173,29 @@ public class ShoppingCartFragment extends Fragment{
                 String contents = data.getStringExtra("SCAN_RESULT");
 
                 //Creates the ProductDecrypter
-                ProductDecrypter productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
+                ProductDecrypter productDecrypter = null;
+                try {
+                    productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                }
 
-                //Adds the product to the product list
-                productList.add(productDecrypter.getProduct());
-                updateProductList();
+                if (productDecrypter!= null){
+                    //Adds the product to the product list
+                    productList.add(productDecrypter.getProduct());
+                    updateProductList();
+                }
+
             }
         }
     }
@@ -192,6 +231,61 @@ public class ShoppingCartFragment extends Fragment{
 
         public void setProductList(List<Product> productList) {
             this.productList = productList;
+        }
+    }
+
+    private class APIRequestPublicKey extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            HttpURLConnection urlConnection = null;
+            try {
+                URL url = new URL(Constants.baseUrl+ Constants.publicKeyUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream;
+
+                if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection.getInputStream();
+                } else {
+                    inputStream = urlConnection.getErrorStream();
+                }
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp, response = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    response += temp;
+                }
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            try {
+                //Trim response
+                response = response.replace("-----BEGIN PUBLIC KEY-----", "");
+                response = response.replace("-----END PUBLIC KEY-----", "");
+
+                //assign to supermakerPublicKey the value
+                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(response.getBytes()));
+                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                supermakerPublicKey = keyFactory.generatePublic(keySpec);
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

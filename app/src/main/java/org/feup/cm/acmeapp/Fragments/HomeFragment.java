@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.CustomDialog;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
@@ -54,12 +55,6 @@ import java.util.TimeZone;
 public class HomeFragment extends Fragment {
 
     private BottomNavigationView bottomNavigation;
-
-    private static final String PREFS_NAME = "preferences";
-    private static final String PREF_USERID ="User ID";
-
-    private final String baseUrl = "https://acmeapi-cm.herokuapp.com/sp/purchase/";
-
     private ListView list;
     private List<Purchase> purchaseList = new ArrayList<>();
     private CustomArrayAdapter adapter;
@@ -94,9 +89,9 @@ public class HomeFragment extends Fragment {
         });
 
         // USER ID RETRIEVED FROM SHAREDPREFERENCES
-        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
 
-        userId = settings.getString(PREF_USERID, "");
+        userId = settings.getString(Constants.PREF_USERID, "");
         //System.out.println(userId);
 
         list = root.findViewById(R.id.purchases_listview);
@@ -161,7 +156,7 @@ public class HomeFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(baseUrl + userId);
+                URL url = new URL(Constants.baseUrl + Constants.purchaseUrl + userId);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream;
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class SharedViewModel extends ViewModel {
 
-    private MutableLiveData<String> name;
     private List<Product> productList;
     private List<Voucher> voucherList;
     private Purchase purchase;
@@ -32,14 +31,6 @@ public class SharedViewModel extends ViewModel {
         this.purchase = purchase;
     }
 
-    public MutableLiveData<String> getName() {
-        return name;
-    }
-
-    public void setName(MutableLiveData<String> name) {
-        this.name = name;
-    }
-
     public List<Voucher> getVoucherList() {
         return voucherList;
     }
@@ -48,20 +39,4 @@ public class SharedViewModel extends ViewModel {
         this.voucherList = voucherList;
     }
 
-    public void setNameData(String nameData) {
-        name.setValue(nameData);
-
-/*
-        If you are calling setNameData from a background thread use:
-        name.postValue(nameData);
-*/
-    }
-
-    public MutableLiveData<String> getNameData() {
-        if (name == null) {
-            name = new MutableLiveData<>();
-        }
-
-        return name;
-    }
 }
