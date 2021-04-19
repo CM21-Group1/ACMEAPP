@@ -2,12 +2,15 @@ package org.feup.cm.acmeapp.model;
 
 import com.google.gson.Gson;
 
-public class ProductDecrypter {
-    String publKey, encryptedMessage;
-    Product product;
+import java.security.PublicKey;
 
-    public ProductDecrypter(String publKey, String encryptedMessage) {
-        this.publKey = publKey;
+public class ProductDecrypter {
+    String encryptedMessage;
+    Product product;
+    PublicKey supermaketPublicKey;
+
+    public ProductDecrypter(PublicKey supermaketPublicKey, String encryptedMessage) {
+        this.supermaketPublicKey = supermaketPublicKey;
         this.encryptedMessage = encryptedMessage;
         createProduct();
     }

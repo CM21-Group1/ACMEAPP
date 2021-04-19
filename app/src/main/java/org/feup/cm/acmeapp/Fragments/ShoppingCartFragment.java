@@ -22,17 +22,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.ProductDecrypter;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +41,11 @@ import static android.app.Activity.RESULT_OK;
 
 public class ShoppingCartFragment extends Fragment{
     private SharedViewModel sharedViewModel;
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-
     private BottomNavigationView bottomNavigation;
     private ListView list;
     private List<Product> productList = new ArrayList<>();
     private CustomArrayAdapter adapter;
-
-    public static ShoppingCartFragment newInstance() {
-        return new ShoppingCartFragment();
-    }
+    private PublicKey supermakerPublicKey;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -121,14 +117,10 @@ public class ShoppingCartFragment extends Fragment{
         //bundle.putCharSequence("Message", message); erro
     }
 
-    public void onRestoreInstanceState(Bundle bundle) {
-        //super.onRestoreInstanceState(bundle);
-        //message = bundle.getCharSequence("Message").toString(); erro
-    }
 
     public void scan(boolean qrcode) {
         try {
-            Intent intent = new Intent(ACTION_SCAN);
+            Intent intent = new Intent(Constants.ACTION_SCAN);
             intent.putExtra("SCAN_MODE", qrcode ? "QR_CODE_MODE" : "PRODUCT_MODE");
             startActivityForResult(intent, 0);
         }
@@ -152,15 +144,17 @@ public class ShoppingCartFragment extends Fragment{
         return downloadDialog.show();
     }
 
+    //Called after the Qr scan
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
+                //Gets the contents of the qr
                 String contents = data.getStringExtra("SCAN_RESULT");
-                String format = data.getStringExtra("SCAN_RESULT_FORMAT");
 
-                System.out.println("Format: " + format + "\nMessage: " + contents);
+                //Creates the ProductDecrypter
+                ProductDecrypter productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
 
-                ProductDecrypter productDecrypter = new ProductDecrypter("falta", contents);
+                //Adds the product to the product list
                 productList.add(productDecrypter.getProduct());
                 updateProductList();
             }
