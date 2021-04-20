@@ -172,24 +172,39 @@ public class ShoppingCartFragment extends Fragment{
                 //Gets the contents of the qr
                 String contents = data.getStringExtra("SCAN_RESULT");
 
+                //Bool error reading QR
+                Boolean error = false;
+
                 //Creates the ProductDecrypter
                 ProductDecrypter productDecrypter = null;
                 try {
                     productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
                 } catch (BadPaddingException e) {
                     e.printStackTrace();
+                    error = true;
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
+                    error = true;
                 } catch (IllegalBlockSizeException e) {
                     e.printStackTrace();
+                    error = true;
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
+                    error = true;
                 } catch (NoSuchPaddingException e) {
                     e.printStackTrace();
+                    error = true;
                 } catch (InvalidKeyException e) {
                     e.printStackTrace();
+                    error = true;
+                } catch (IllegalArgumentException e){
+                    e.printStackTrace();
+                    error = true;
                 }
 
+                if (error){
+                    System.out.println("QR Invalido");
+                }
                 if (productDecrypter!= null){
                     //Adds the product to the product list
                     productList.add(productDecrypter.getProduct());

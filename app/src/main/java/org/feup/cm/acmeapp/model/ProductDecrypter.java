@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -28,19 +29,13 @@ public class ProductDecrypter {
         Cipher cipher = null;
         cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, supermaketPublicKey);
-        String s = new String(cipher.doFinal(encryptedMessage.getBytes("UTF-8")), "UTF-8");
+
+        String s = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedMessage)),"UTF-8");
 
         Gson g = new Gson();
         product = g.fromJson(s , Product.class);
     }
 
-    /*
-    {
-      "productCode" : "12345",
-      "name" : "Teste",
-      "price" : 25
-    }
- */
 
     public Product getProduct(){
         return product;
