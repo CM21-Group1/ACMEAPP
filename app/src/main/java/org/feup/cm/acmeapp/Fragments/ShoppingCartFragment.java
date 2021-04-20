@@ -117,7 +117,9 @@ public class ShoppingCartFragment extends Fragment{
                 if(productList.isEmpty()){
                     Toast.makeText(getContext(), "No products added to the cart", Toast.LENGTH_LONG).show();
                 }else{
+                    System.out.println("Set do product list" + productList);
                     sharedViewModel.setProductList(productList);
+                    System.out.println(sharedViewModel.getProductList());
                     Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
                 }
             }
@@ -128,6 +130,9 @@ public class ShoppingCartFragment extends Fragment{
 
         //Get the public key from supermarket
         new APIRequestPublicKey().execute();
+
+        productList.add(new Product("123456", "Teste", 2.5));
+        updateProductList();
 
         return root;
     }

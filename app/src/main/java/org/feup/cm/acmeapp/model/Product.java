@@ -40,7 +40,7 @@ public class Product {
         return "{" +
                 "\"_id\": \"" + productCode + '\"' +
                 ", \"name\": \"" + name + '\"' +
-                ", \"price\": \"" + price +
+                ", \"price\": " + price +
                 '}';
     }
 }
