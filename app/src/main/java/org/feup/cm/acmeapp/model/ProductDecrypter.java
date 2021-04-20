@@ -26,8 +26,7 @@ public class ProductDecrypter {
 
     private void createProduct() throws BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
 
-        Cipher cipher = null;
-        cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, supermaketPublicKey);
 
         String s = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedMessage)),"UTF-8");

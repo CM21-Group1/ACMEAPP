@@ -7,6 +7,7 @@ import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.Purchase;
 import org.feup.cm.acmeapp.model.Voucher;
 
+import java.security.PublicKey;
 import java.util.List;
 
 public class SharedViewModel extends ViewModel {
@@ -14,6 +15,16 @@ public class SharedViewModel extends ViewModel {
     private List<Product> productList;
     private List<Voucher> voucherList;
     private Purchase purchase;
+
+    public PublicKey getPersonalPublicKey() {
+        return personalPublicKey;
+    }
+
+    public void setPersonalPublicKey(PublicKey personalPublicKey) {
+        this.personalPublicKey = personalPublicKey;
+    }
+
+    private PublicKey personalPublicKey;
 
     public List<Product> getProductList() {
         return productList;

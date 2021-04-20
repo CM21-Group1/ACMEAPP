@@ -15,12 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.PubKey;
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
@@ -50,6 +52,7 @@ public class RegisterFragment extends Fragment {
     private String name;
     private String payment_card;
     private View viewTemp;
+    private SharedViewModel sharedViewModel;
 
     public static KeyPair getKeyPair() {
         KeyPair kp = null;
