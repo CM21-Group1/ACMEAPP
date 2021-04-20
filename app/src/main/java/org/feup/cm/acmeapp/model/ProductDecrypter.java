@@ -2,6 +2,8 @@ package org.feup.cm.acmeapp.model;
 
 import com.google.gson.Gson;
 
+import org.feup.cm.acmeapp.Constants;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -25,8 +27,7 @@ public class ProductDecrypter {
     }
 
     private void createProduct() throws BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
-
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance(Constants.KEY_ALGO);
         cipher.init(Cipher.DECRYPT_MODE, supermaketPublicKey);
 
         String s = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedMessage)),"UTF-8");

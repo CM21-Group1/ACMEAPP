@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
@@ -37,10 +38,13 @@ import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -54,18 +58,6 @@ public class RegisterFragment extends Fragment {
     private View viewTemp;
     private SharedViewModel sharedViewModel;
 
-    public static KeyPair getKeyPair() {
-        KeyPair kp = null;
-        try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(2048);
-            kp = kpg.generateKeyPair();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return kp;
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -77,6 +69,8 @@ public class RegisterFragment extends Fragment {
         User user = getArguments().getParcelable("user");
 
         System.out.println(user.getName());
+
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,40 +97,27 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getContext(), "Payment_card empty", Toast.LENGTH_LONG).show();
                 } else {
                     viewTemp = view;
-                    generateAndStoreKeys();
-                    new APIRequest().execute();
+
+
+                    try {
+                        KeyPairGenerator keyGen = null;
+                        keyGen = KeyPairGenerator.getInstance(Constants.KEY_ALGO);
+                        keyGen.initialize(Constants.KEY_SIZE);
+                        KeyPair pair = keyGen.generateKeyPair();
+
+                        sharedViewModel.setPersonalPrivateKey(pair.getPrivate());
+                        sharedViewModel.setPersonalPublicKey(pair.getPublic());
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    new APIRequestCreateUser().execute();
                 }
             }
         });
 
-//      --------------------  KEYPAIR TESTES ---------------------------------------------
 
-        KeyPair clientKeys = getKeyPair();
-        PublicKey publicKey = clientKeys.getPublic();
-        PrivateKey privateKey = clientKeys.getPrivate();
-
-        System.out.println(publicKey);
-        System.out.println(privateKey);
-//
-//        KeyPairGenerator kpg = null;
-//        try {
-//            kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
-//            kpg.initialize(new KeyGenParameterSpec.Builder("alias", KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY).setDigests(KeyProperties.DIGEST_SHA256,
-//                    KeyProperties.DIGEST_SHA512).build());
-//        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-//            e.printStackTrace();
-//        }
-//
-//        assert kpg != null;
-//        KeyPair kp = kpg.generateKeyPair();
-//
-//        PublicKey publicKey2 = clientKeys.getPublic();
-//        PrivateKey privateKey2 = clientKeys.getPrivate();
-//
-//        System.out.println(publicKey2);
-//        System.out.println(privateKey2);
-
-//   -----------------------------------------------------------------------------------------------
 
         return root;
     }
@@ -146,48 +127,8 @@ public class RegisterFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void generateAndStoreKeys() {
-        try {
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-            if (entry == null) {
-                Calendar start = new GregorianCalendar();
-                Calendar end = new GregorianCalendar();
-                end.add(Calendar.YEAR, 20);
-                KeyPairGenerator kgen = KeyPairGenerator.getInstance(Constants.KEY_ALGO, Constants.ANDROID_KEYSTORE);
-                AlgorithmParameterSpec spec = new KeyPairGeneratorSpec.Builder(getContext())
-                        .setKeySize(Constants.KEY_SIZE)
-                        .setAlias(Constants.keyname)
-                        .setSubject(new X500Principal("CN=" + Constants.keyname))
-                        .setSerialNumber(BigInteger.valueOf(12121212))
-                        .setStartDate(start.getTime())
-                        .setEndDate(end.getTime())
-                        .build();
-                kgen.initialize(spec);
-                KeyPair kp = kgen.generateKeyPair();
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 
-    PubKey getPubKey() {
-        PubKey pkey = new PubKey();
-        try {
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-            PublicKey pub = ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey();
-            pkey.modulus = ((RSAPublicKey) pub).getModulus().toByteArray();
-            pkey.exponent = ((RSAPublicKey) pub).getPublicExponent().toByteArray();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return pkey;
-    }
-
-    private class APIRequest extends AsyncTask<Void, Void, String> {
+    private class APIRequestCreateUser extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -195,7 +136,7 @@ public class RegisterFragment extends Fragment {
             JSONObject jsonBody;
             String requestBody;
             HttpURLConnection urlConnection = null;
-            String publicKey = getPubKey().modulus.toString();
+            String publicKey = ((RSAPublicKey) sharedViewModel.getPersonalPublicKey()).getModulus().toString();
 
             try {
 
@@ -235,7 +176,6 @@ public class RegisterFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
-            System.out.println(response);
             if (response.equals("{\"message\":\"Username already registered\"}")) {
                 Toast.makeText(getContext(), "Username already registered.", Toast.LENGTH_LONG).show();
             } else {

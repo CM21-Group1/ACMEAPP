@@ -1,5 +1,10 @@
 package org.feup.cm.acmeapp.model;
 
+import org.feup.cm.acmeapp.Constants;
+
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -78,5 +83,36 @@ public class Purchase {
                 ", \"totalPrice\": " + totalPrice +
                 '}';
 
+    }
+
+    public String QRCodeString(PrivateKey userPrivateKey){
+        String information = this.toString();
+
+        try {
+            System.out.println(userPrivateKey);
+            /*Signature sign = Signature.getInstance(Constants.SIGN_ALGO);
+            sign.initSign(userPrivateKey);
+            byte[] bytes = information.getBytes();
+            sign.update(bytes);
+            byte[] signature = sign.sign();
+            System.out.println(new String(signature));
+            System.out.println(Base64.getDecoder().decode(new String(signature,"UTF8")));*/
+
+
+            Signature privateSignature = Signature.getInstance("SHA256withRSA");
+            privateSignature.initSign(userPrivateKey);
+            privateSignature.update(information.getBytes("UTF_8"));
+
+            byte[] signature = privateSignature.sign();
+
+            System.out.println(Base64.getEncoder().encodeToString(signature));
+
+            return Base64.getEncoder().encodeToString(signature);
+
+            //return new String(signature,"UTF8");
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
     }
 }
