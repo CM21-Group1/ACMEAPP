@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -68,7 +69,7 @@ public class ShoppingCartFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.shopping_cart_fragment, container, false);
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.shopping_cart);

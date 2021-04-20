@@ -46,7 +46,7 @@ public class QRCheckoutFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
         sharedViewModel.setProductList(null);

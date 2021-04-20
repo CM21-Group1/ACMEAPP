@@ -64,7 +64,7 @@ public class VouchersFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.vouchers);

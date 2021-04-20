@@ -4,11 +4,13 @@ public class Product {
     private String productCode;
     private String name;
     private double price;
+    private int quantity;
 
     public Product(String productCode, String name, double price) {
         this.productCode = productCode;
         this.name = name;
         this.price = price;
+        quantity = 1;
     }
 
     public String getProductCode() {
@@ -33,6 +35,16 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void increaseQuantity(){
+        quantity++;
+    }
+
+    public void decreaseQuantity(){
+        if (quantity > 1){
+            quantity--;
+        }
     }
 
     @Override

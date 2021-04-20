@@ -69,11 +69,13 @@ public class CheckoutFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.checkout_fragment, container, false);
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         productList = sharedViewModel.getProductList();
 
         System.out.println("Get do product list: " + productList);
+
+        System.out.println(productList);
 
         for (Product product : productList) {
             totalAmount += product.getPrice();
@@ -183,7 +185,7 @@ public class CheckoutFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(Constants.baseUrl + userId);
+                URL url = new URL(Constants.baseUrl + Constants.vouchersUrl + userId);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream;
 
