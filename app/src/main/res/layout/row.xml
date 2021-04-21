@@ -2,7 +2,6 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,18 +12,14 @@
         app:cardElevation="10dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-            <LinearLayout
-                android:id="@+id/rlOrderHistory"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                tools:ignore="UselessParent">
+                android:layout_height="match_parent">
 
                 <org.feup.cm.acmeapp.customfont.MyTextViewMeriendaRegular
                     android:id="@+id/product_name"
@@ -33,18 +28,38 @@
                     android:text="Product Name"
                     android:textSize="18dp"
                     android:textStyle="bold" />
+            </TableRow>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end">
+
+                <ImageButton
+                    android:id="@+id/delete_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/outline_delete_black_20"
+                    android:contentDescription="Delete Item" />
+
+            </TableRow>
+
+            <TableRow
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <org.feup.cm.acmeapp.customfont.MyTextView
                     android:id="@+id/product_price"
+                    android:gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="Product Price" />
+            </TableRow>
 
-            </LinearLayout>
-
-        </LinearLayout>
+        </TableLayout>
 
     </androidx.cardview.widget.CardView>
 

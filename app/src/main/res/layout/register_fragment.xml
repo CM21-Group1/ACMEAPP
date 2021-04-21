@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Name"
-        android:drawableEnd="@drawable/icon_user"
+        android:drawableEnd="@drawable/outline_info_black_18"
         android:inputType="textPersonName" />
 
     <EditText
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/username"
-        android:drawableEnd="@drawable/icon_user"
+        android:drawableEnd="@drawable/outline_account_circle_black_18"
         android:inputType="textPersonName" />
 
     <EditText
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/password"
-        android:drawableEnd="@drawable/icon_password"
+        android:drawableEnd="@drawable/outline_lock_black_18"
         android:inputType="textPassword" />
 
     <EditText
@@ -42,7 +42,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/payment_card"
-        android:drawableEnd="@drawable/icon_password"
+        android:drawableEnd="@drawable/outline_credit_card_black_18"
+        android:imeOptions="actionDone"
         android:inputType="number" />
 
     <Button
@@ -52,4 +53,17 @@
         android:background="@drawable/buttons"
         android:layout_marginTop="50dp"
         android:text="@string/go" />
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttons"
+        android:layout_marginTop="50dp"
+        android:text="@string/back" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

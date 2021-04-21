@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ACME APP</string>
+    <string name="app_name">ACME Supermarket</string>
     <string name="login">Login</string>
     <string name="description">description</string>
     <string name="username">Username</string>
@@ -22,4 +22,8 @@
     <string name="empty_product_list">Empty Product List</string>
     <string name="no_purchases_made_yet">No Purchases Made Yet</string>
     <string name="no_vouchers">No Vouchers</string>
+    <string name="vouchers">Vouchers</string>
+    <string name="back">Back</string>
+    <string name="pay">Pay</string>
+    <string name="add_voucher">Add voucher</string>
 </resources>

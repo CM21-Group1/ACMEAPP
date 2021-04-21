@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:drawableEnd="@drawable/icon_user"
+        android:drawableEnd="@drawable/outline_account_circle_black_18"
         android:hint="@string/username" />
 
     <EditText
@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
-        android:drawableEnd="@drawable/icon_password"
+        android:imeOptions="actionDone"
+        android:drawableEnd="@drawable/outline_lock_black_18"
         android:hint="@string/password" />
 
     <Button

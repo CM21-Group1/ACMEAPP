@@ -53,7 +53,7 @@
                 android:layout_margin="16dp"
                 android:padding="20dp"
                 android:text="@string/add_new_product"
-                android:src="@drawable/icon_qrscan"
+                android:src="@drawable/outline_qr_code_scanner_white_18"
                 app:tint="@color/white"
                 app:backgroundTint="#673AB7"
                 android:textColor="@color/white" />
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="16dp"
-                android:src="@drawable/icon_checkout"
+                android:src="@drawable/outline_shopping_basket_white_18"
                 android:padding="20dp"
                 app:backgroundTint="#673AB7"
                 android:text="@string/proceed_to_checkout"
@@ -74,15 +74,7 @@
 
     </FrameLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_menu" />
+    <include
+        layout="@layout/bottom_navigation_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

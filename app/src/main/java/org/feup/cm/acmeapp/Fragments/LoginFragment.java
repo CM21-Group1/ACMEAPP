@@ -74,10 +74,13 @@ public class LoginFragment extends Fragment {
                 password = password_edittext.getText().toString();
 
                 if(username.isEmpty() && password.isEmpty()){
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Username & Password empty", Toast.LENGTH_LONG).show();
                 }else if(username.isEmpty()){
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Username empty", Toast.LENGTH_LONG).show();
                 }else if(password.isEmpty()){
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Password empty", Toast.LENGTH_LONG).show();
                 }else{
                     viewTemp = view;
@@ -184,8 +187,10 @@ public class LoginFragment extends Fragment {
             super.onPostExecute(response);
             System.out.println(response);
             if(response.equals("{\"message\":\"Username Not found.\"}")){
+                spinner.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Username Not found.", Toast.LENGTH_LONG).show();
             }else if(response.equals("{\"message\":\"Password incorrect\"}")){
+                spinner.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Password incorrect.", Toast.LENGTH_LONG).show();
             }else{
 //                try {

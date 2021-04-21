@@ -3,17 +3,17 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/icons_home"
+        android:icon="@drawable/outline_home_black_18"
         android:title="@string/home"/>
     <item
         android:id="@+id/vouchers"
         android:enabled="true"
-        android:icon="@drawable/icons_history"
-        android:title="@string/not_defined"/>
+        android:icon="@drawable/outline_local_offer_black_18"
+        android:title="@string/vouchers"/>
 
     <item
         android:id="@+id/shopping_cart"
         android:enabled="true"
-        android:icon="@drawable/icons_shoppingcart"
+        android:icon="@drawable/outline_shopping_cart_black_18"
         android:title="@string/shopping_cart"/>
 </menu>

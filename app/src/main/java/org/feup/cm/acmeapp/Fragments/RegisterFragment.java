@@ -4,24 +4,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.security.KeyPairGeneratorSpec;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
-import org.feup.cm.acmeapp.PubKey;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
@@ -33,22 +30,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
     private String username;
@@ -58,6 +44,8 @@ public class RegisterFragment extends Fragment {
     private View viewTemp;
     private SharedViewModel sharedViewModel;
 
+    private ProgressBar spinner;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -65,6 +53,9 @@ public class RegisterFragment extends Fragment {
         View root = inflater.inflate(R.layout.register_fragment, container, false);
 
         final Button buttonSignUp = root.findViewById(R.id.btn_register);
+        final Button buttonBack = root.findViewById(R.id.btn_back);
+        spinner = root.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
 
         User user = getArguments().getParcelable("user");
 
@@ -75,6 +66,7 @@ public class RegisterFragment extends Fragment {
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                spinner.setVisibility(View.VISIBLE);
                 EditText username_edittext = root.findViewById(R.id.edit_register_username);
                 EditText password_edittext = root.findViewById(R.id.edit_register_pwd);
                 EditText name_edittext = root.findViewById(R.id.edit_register_name);
@@ -86,14 +78,19 @@ public class RegisterFragment extends Fragment {
                 payment_card = payment_card_edittext.getText().toString();
 
                 if (username.isEmpty() && password.isEmpty() && name.isEmpty() && payment_card.isEmpty()) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "All entries are empty", Toast.LENGTH_LONG).show();
                 } else if (username.isEmpty()) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Username empty", Toast.LENGTH_LONG).show();
                 } else if (password.isEmpty()) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Password empty", Toast.LENGTH_LONG).show();
                 } else if (name.isEmpty()) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Name empty", Toast.LENGTH_LONG).show();
                 } else if (payment_card.isEmpty()) {
+                    spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Payment_card empty", Toast.LENGTH_LONG).show();
                 } else {
                     viewTemp = view;
@@ -111,13 +108,18 @@ public class RegisterFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-
+                    savePreferences();
                     new APIRequestCreateUser().execute();
                 }
             }
         });
 
-
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(root).popBackStack();
+            }
+        });
 
         return root;
     }
@@ -125,6 +127,15 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    private void savePreferences() {
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString(Constants.PREF_UNAME, username);
+        editor.putString(Constants.PREF_PASSWORD, password);
+        editor.apply();
     }
 
 
@@ -177,6 +188,7 @@ public class RegisterFragment extends Fragment {
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
             if (response.equals("{\"message\":\"Username already registered\"}")) {
+                spinner.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Username already registered.", Toast.LENGTH_LONG).show();
             } else {
                 try {

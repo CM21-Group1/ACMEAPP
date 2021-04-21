@@ -15,13 +15,17 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -59,12 +63,18 @@ public class VouchersFragment extends Fragment {
     private String userId;
     private SharedViewModel sharedViewModel;
 
+    private ProgressBar spinner;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+
+        setHasOptionsMenu(true);
+        spinner = root.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.vouchers);
@@ -95,6 +105,7 @@ public class VouchersFragment extends Fragment {
         //System.out.println(userId);
 
         list = root.findViewById(R.id.vouchers_listview);
+        list.setEmptyView(root.findViewById(R.id.empty_list));
         adapter = new CustomArrayAdapter(getContext(), 0, voucherList);
 
         // Get all purchases from customer from user id
@@ -107,6 +118,28 @@ public class VouchersFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.top_bar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            Toast.makeText(getContext(), "Logout, bye!", Toast.LENGTH_SHORT).show();
+            SharedPreferences preferences = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.apply();
+            Navigation.findNavController(getView()).navigate(R.id.action_vouchersFragment_to_loginFragment);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private class CustomArrayAdapter extends ArrayAdapter<Voucher> {
 
@@ -200,7 +233,7 @@ public class VouchersFragment extends Fragment {
                 sharedViewModel.setVoucherList(voucherList);
                 adapter.setVouchersList(voucherList);
                 list.setAdapter(adapter);
-
+                spinner.setVisibility(View.GONE);
 
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();

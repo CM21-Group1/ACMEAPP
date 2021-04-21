@@ -7,14 +7,18 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +26,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -74,15 +77,23 @@ public class ShoppingCartFragment extends Fragment{
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.shopping_cart);
 
+        setHasOptionsMenu(true);
+
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home:
+                        if(!productList.isEmpty()){
+                            sharedViewModel.setProductList(productList);
+                        }
                         Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_homeFragment);
                         return true;
                     case R.id.vouchers:
+                        if(!productList.isEmpty()){
+                            sharedViewModel.setProductList(productList);
+                        }
                         Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_vouchersFragment);
                         return true;
                     case R.id.shopping_cart:
@@ -106,6 +117,11 @@ public class ShoppingCartFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //QR Code Scan
+
+                //For testing
+                //productList.add(new Product("Teste", "test", Math.random()));
+
+                updateProductList();
                 scan(true);
             }
         });
@@ -118,9 +134,7 @@ public class ShoppingCartFragment extends Fragment{
                 if(productList.isEmpty()){
                     Toast.makeText(getContext(), "No products added to the cart", Toast.LENGTH_LONG).show();
                 }else{
-                    System.out.println("Set do product list" + productList);
                     sharedViewModel.setProductList(productList);
-                    System.out.println(sharedViewModel.getProductList());
                     Navigation.findNavController(root).navigate(R.id.action_shoppingCartFragment_to_checkoutFragment);
                 }
             }
@@ -132,10 +146,29 @@ public class ShoppingCartFragment extends Fragment{
         //Get the public key from supermarket
         new APIRequestPublicKey().execute();
 
-        productList.add(new Product("123456", "Teste", 2.5));
         updateProductList();
 
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.top_bar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            Toast.makeText(getContext(), "Logout, bye!", Toast.LENGTH_SHORT).show();
+            SharedPreferences preferences = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.apply();
+            Navigation.findNavController(getView()).navigate(R.id.action_shoppingCartFragment_to_loginFragment);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -143,7 +176,6 @@ public class ShoppingCartFragment extends Fragment{
         super.onSaveInstanceState(bundle);
         //bundle.putCharSequence("Message", message); erro
     }
-
 
     public void scan(boolean qrcode) {
         try {
@@ -185,25 +217,7 @@ public class ShoppingCartFragment extends Fragment{
                 ProductDecrypter productDecrypter = null;
                 try {
                     productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                    error = true;
-                } catch (IllegalArgumentException e){
+                } catch (BadPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | UnsupportedEncodingException | NoSuchPaddingException | InvalidKeyException | IllegalArgumentException e) {
                     e.printStackTrace();
                     error = true;
                 }
@@ -227,6 +241,7 @@ public class ShoppingCartFragment extends Fragment{
     }
 
     private void updateProductList() {
+        adapter = new CustomArrayAdapter(getContext(), 0, productList);
         adapter.setProductList(productList);
         list.setAdapter(adapter);
     }
@@ -246,6 +261,15 @@ public class ShoppingCartFragment extends Fragment{
 
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
             ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
+
+            ImageButton deleteBtn = row.findViewById(R.id.delete_product);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    productList.remove(position);
+                    updateProductList();
+                }
+            });
 
             return (row);
         }

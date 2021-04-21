@@ -23,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
@@ -154,7 +156,7 @@ public class CheckoutFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        Button pay_btn = root.findViewById(R.id.pay_btn);
+        FloatingActionButton pay_btn = root.findViewById(R.id.pay_btn);
         pay_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,6 +168,14 @@ public class CheckoutFragment extends Fragment {
                     sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount, selectedVoucher));
                 }
                 Navigation.findNavController(root).navigate(R.id.action_checkoutFragment_to_QRCheckoutFragment);
+            }
+        });
+
+        FloatingActionButton back_btn = root.findViewById(R.id.back_btn);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(root).navigateUp();
             }
         });
 
