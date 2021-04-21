@@ -73,7 +73,7 @@ public class QRCheckoutFragment extends Fragment {
             }
         });
 
-        String s = purchase.QRCodeString(sharedViewModel.getPersonalPrivateKey());
+        String s = "Qr info";//purchase.QRCodeString(sharedViewModel.getPersonalPrivateKey());
         new Thread(new convertToQR(s)).start();
         return root;
     }

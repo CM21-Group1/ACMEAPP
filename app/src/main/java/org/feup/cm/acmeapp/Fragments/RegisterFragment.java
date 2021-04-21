@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.security.KeyPairGeneratorSpec;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.Security.Key;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
@@ -30,20 +32,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
+    private SharedViewModel sharedViewModel;
     private String username;
     private String password;
     private String name;
     private String payment_card;
     private View viewTemp;
-    private SharedViewModel sharedViewModel;
-
     private ProgressBar spinner;
 
 
@@ -54,9 +64,11 @@ public class RegisterFragment extends Fragment {
 
         final Button buttonSignUp = root.findViewById(R.id.btn_register);
         final Button buttonBack = root.findViewById(R.id.btn_back);
+
         spinner = root.findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
+        ///////////////////////////////////O que é este user??
         User user = getArguments().getParcelable("user");
 
         System.out.println(user.getName());
@@ -95,20 +107,11 @@ public class RegisterFragment extends Fragment {
                 } else {
                     viewTemp = view;
 
+                    //Creates and stores the keys
+                    createAndStoreKey();
+                    storeKeysViewModel();
 
-                    try {
-                        KeyPairGenerator keyGen = null;
-                        keyGen = KeyPairGenerator.getInstance(Constants.KEY_ALGO);
-                        keyGen.initialize(Constants.KEY_SIZE);
-                        KeyPair pair = keyGen.generateKeyPair();
-
-                        sharedViewModel.setPersonalPrivateKey(pair.getPrivate());
-                        sharedViewModel.setPersonalPublicKey(pair.getPublic());
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
-
-                    savePreferences();
+                    //Makes the request
                     new APIRequestCreateUser().execute();
                 }
             }
@@ -129,6 +132,7 @@ public class RegisterFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    //Saves the user name and password in the user preferences
     private void savePreferences() {
         SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
@@ -138,6 +142,73 @@ public class RegisterFragment extends Fragment {
         editor.apply();
     }
 
+    //Creates and stores the user private and public key and stores them in the keystore
+    private void createAndStoreKey(){
+        System.out.println("Creates keys!!!!!!!!!");
+        try {
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+
+            Calendar start = new GregorianCalendar();
+            Calendar end = new GregorianCalendar();
+            end.add(Calendar.YEAR, 20);
+            KeyPairGenerator kgen = KeyPairGenerator.getInstance(Constants.KEY_ALGO, Constants.ANDROID_KEYSTORE);
+            AlgorithmParameterSpec spec = new KeyPairGeneratorSpec.Builder(getContext())
+                    .setKeySize(Constants.KEY_SIZE)
+                    .setAlias(Constants.keyname)
+                    .setSubject(new X500Principal("CN=" + Constants.keyname))
+                    .setSerialNumber(BigInteger.valueOf(12121212))
+                    .setStartDate(start.getTime())
+                    .setEndDate(end.getTime())
+                    .build();
+
+            kgen.initialize(spec);
+            KeyPair kp = kgen.generateKeyPair();
+
+        }catch (Exception e){
+            System.out.println(e + " in creation of the key");
+        }
+    }
+
+    //Stores the created keys in the viewModel
+    private void storeKeysViewModel() {
+        byte[] modulosAux = null;
+        try {
+            //Gets the KeyStore
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+
+            //Creates the two adapter class keys
+            PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
+            Key publickey = new Key(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray());
+            modulosAux = ((RSAPublicKey)pub).getModulus().toByteArray();
+
+            //Stores in the sharedViewModel
+            System.out.println("Faz print");
+            sharedViewModel.setPublicKey(publickey);
+
+        }catch (Exception e){
+            System.out.println(e + " in load of public the key");
+        }
+        try {
+            byte[] exp = null;
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+            PrivateKey priv = ((KeyStore.PrivateKeyEntry)entry).getPrivateKey();
+            exp = ((RSAPrivateKey)priv).getPrivateExponent().toByteArray();
+
+            Key privatekey = new Key(modulosAux,exp);
+
+            //Stores in the sharedViewModel
+            System.out.println("Faz print");
+            sharedViewModel.setPrivateKey(privatekey);
+        }catch (Exception e){
+            System.out.println(e + " in load of private the key");
+        }
+    }
 
     private class APIRequestCreateUser extends AsyncTask<Void, Void, String> {
 
@@ -147,16 +218,18 @@ public class RegisterFragment extends Fragment {
             JSONObject jsonBody;
             String requestBody;
             HttpURLConnection urlConnection = null;
-            String publicKey = ((RSAPublicKey) sharedViewModel.getPersonalPublicKey()).getModulus().toString();
 
             try {
+
 
                 jsonBody = new JSONObject();
                 jsonBody.put("username", username);
                 jsonBody.put("password", password);
                 jsonBody.put("name", name);
                 jsonBody.put("payment_card", payment_card);
-                jsonBody.put("publicKey", publicKey);
+                jsonBody.put("publicKey",sharedViewModel.getPubKey().toString());
+
+                System.out.println(jsonBody);
 
                 requestBody = Utils.buildPostParameters(jsonBody);
                 urlConnection = (HttpURLConnection) Utils.makeRequest("POST", Constants.baseUrl + Constants.registerUrl, null, "application/json", requestBody);
@@ -192,6 +265,9 @@ public class RegisterFragment extends Fragment {
                 Toast.makeText(getContext(), "Username already registered.", Toast.LENGTH_LONG).show();
             } else {
                 try {
+                    //Stores User information
+                    savePreferences();
+
                     JSONObject jsonBody = new JSONObject(response);
 
                     SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);

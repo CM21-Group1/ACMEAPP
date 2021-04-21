@@ -1,38 +1,36 @@
 package org.feup.cm.acmeapp;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.feup.cm.acmeapp.Security.Key;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.Purchase;
 import org.feup.cm.acmeapp.model.Voucher;
 
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.List;
 
 public class SharedViewModel extends ViewModel {
-
     private List<Product> productList;
     private List<Voucher> voucherList;
     private Purchase purchase;
-    private PublicKey personalPublicKey;
-    private PrivateKey personalPrivateKey;
+    private Key pubKey, privkey;
 
-    public PrivateKey getPersonalPrivateKey() {
-        return personalPrivateKey;
+    public Key getPrivateKey() {
+        return privkey;
     }
 
-    public void setPersonalPrivateKey(PrivateKey personalPrivateKey) {
-        this.personalPrivateKey = personalPrivateKey;
+    public void setPrivateKey ( Key privkey) {
+        System.out.println("Set private key" + privkey );
+        this.privkey = privkey;
     }
 
-    public PublicKey getPersonalPublicKey() {
-        return personalPublicKey;
+    public Key getPubKey() {
+        return pubKey;
     }
 
-    public void setPersonalPublicKey(PublicKey personalPublicKey) {
-        this.personalPublicKey = personalPublicKey;
+    public void setPublicKey (Key privkey) {
+        System.out.println("Set public key" + privkey );
+        this.privkey = privkey;
     }
 
     public List<Product> getProductList() {

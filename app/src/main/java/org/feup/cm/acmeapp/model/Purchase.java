@@ -85,18 +85,18 @@ public class Purchase {
 
     }
 
-    public String QRCodeString(PrivateKey userPrivateKey){
+   /* public String QRCodeString(PrivateKey userPrivateKey){
         String information = this.toString();
 
         try {
-            System.out.println(userPrivateKey);
-            /*Signature sign = Signature.getInstance(Constants.SIGN_ALGO);
+            /*System.out.println(userPrivateKey);
+            Signature sign = Signature.getInstance(Constants.SIGN_ALGO);
             sign.initSign(userPrivateKey);
             byte[] bytes = information.getBytes();
             sign.update(bytes);
             byte[] signature = sign.sign();
             System.out.println(new String(signature));
-            System.out.println(Base64.getDecoder().decode(new String(signature,"UTF8")));*/
+            System.out.println(Base64.getDecoder().decode(new String(signature,"UTF8")));
 
 
             Signature privateSignature = Signature.getInstance("SHA256withRSA");
@@ -114,5 +114,5 @@ public class Purchase {
             System.out.println(e);
         }
         return null;
-    }
+    }*/
 }
