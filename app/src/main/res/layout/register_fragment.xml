@@ -3,67 +3,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="50dp"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".Fragments.RegisterFragment">
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_gravity="start"
+        android:layout_height="100dp"
+        android:src="@drawable/logov2"
+        android:contentDescription="@string/description"
+        />
 
-    <EditText
-        android:id="@+id/edit_register_name"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="50dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_register_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_info_black_18"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edit_register_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_account_circle_black_18"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edit_register_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_lock_black_18"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/edit_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_credit_card_black_18"
+            android:ems="10"
+            android:hint="@string/payment_card"
+            android:imeOptions="actionDone"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Name"
-        android:drawableEnd="@drawable/outline_info_black_18"
-        android:inputType="textPersonName" />
+        android:layout_marginHorizontal="50dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_register_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/username"
-        android:drawableEnd="@drawable/outline_account_circle_black_18"
-        android:inputType="textPersonName" />
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/purple_200"
+            android:background="@drawable/buttons"
+            android:text="@string/go" />
 
-    <EditText
-        android:id="@+id/edit_register_pwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/password"
-        android:drawableEnd="@drawable/outline_lock_black_18"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/edit_payment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/payment_card"
-        android:drawableEnd="@drawable/outline_credit_card_black_18"
-        android:imeOptions="actionDone"
-        android:inputType="number" />
-
-    <Button
-        android:id="@+id/btn_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/buttons"
-        android:layout_marginTop="50dp"
-        android:text="@string/go" />
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/buttons"
-        android:layout_marginTop="50dp"
-        android:text="@string/back" />
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/purple_200"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/buttons"
+            android:text="@string/back" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

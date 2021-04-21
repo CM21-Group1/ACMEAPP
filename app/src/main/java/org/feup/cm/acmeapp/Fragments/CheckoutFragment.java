@@ -1,5 +1,6 @@
 package org.feup.cm.acmeapp.Fragments;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -176,6 +177,19 @@ public class CheckoutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(root).navigateUp();
+            }
+        });
+
+        FloatingActionButton nfc_btn = root.findViewById(R.id.nfc_btn);
+        nfc_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedVoucher == null){
+                    sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount));
+                }else{
+                    sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount, selectedVoucher));
+                }
+                Navigation.findNavController(root).navigate(R.id.action_checkoutFragment_to_NFCFragment);
             }
         });
 

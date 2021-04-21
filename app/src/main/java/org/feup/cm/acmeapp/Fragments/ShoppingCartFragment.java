@@ -119,10 +119,10 @@ public class ShoppingCartFragment extends Fragment{
                 //QR Code Scan
 
                 //For testing
-                //productList.add(new Product("Teste", "test", Math.random()));
+                productList.add(new Product("Teste", "test", Math.random()));
 
                 updateProductList();
-                scan(true);
+                //scan(true);
             }
         });
 

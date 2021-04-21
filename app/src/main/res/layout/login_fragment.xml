@@ -4,55 +4,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="70dp"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".Fragments.LoginFragment">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo"
+        android:layout_width="250dp"
+        android:layout_gravity="center"
+        android:layout_height="250dp"
+        android:src="@drawable/logov2"
         android:contentDescription="@string/description"
         />
 
-    <EditText
-        android:id="@+id/edit_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:drawableEnd="@drawable/outline_account_circle_black_18"
-        android:hint="@string/username" />
+        android:padding="20dp"
+        android:layout_marginHorizontal="70dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_pwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:imeOptions="actionDone"
-        android:drawableEnd="@drawable/outline_lock_black_18"
-        android:hint="@string/password" />
+        <EditText
+            android:id="@+id/edit_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_account_circle_black_18"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/login_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/buttons"
-        android:text="@string/go" />
+        <EditText
+            android:id="@+id/edit_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/outline_lock_black_18"
+            android:ems="10"
+            android:hint="@string/password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/register_btn"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/buttons"
-        android:text="@string/register" />
+        android:layout_marginHorizontal="70dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:textColor="@color/purple_200"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/buttons"
+            android:text="@string/go" />
+
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="match_parent"
+            android:textColor="@color/purple_200"
+            android:background="@drawable/buttons"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/register" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
