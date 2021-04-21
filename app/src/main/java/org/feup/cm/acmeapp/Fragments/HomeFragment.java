@@ -32,6 +32,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.CustomDialog;
+import org.feup.cm.acmeapp.ProductsDialog;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.Purchase;
@@ -119,7 +120,8 @@ public class HomeFragment extends Fragment {
                 // Create a dialog for each purchase clicked. Dialog with all products listed
                 Purchase purchaseClicked = purchaseList.get(position);
 
-                CustomDialog cdd = new CustomDialog(getActivity(), purchaseClicked.getProducts());
+                ProductsDialog cdd = new ProductsDialog(getActivity(), purchaseClicked.getProducts());
+                cdd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 cdd.show();
             }
         });
