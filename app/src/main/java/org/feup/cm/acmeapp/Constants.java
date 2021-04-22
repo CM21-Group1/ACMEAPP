@@ -19,5 +19,5 @@ public class Constants {
     public static final String publicKeyUrl = "/sp/getpublickey";
     public static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final int IMAGE_SIZE=900;
-
+    public static final String ISO_SET = "ISO-8859-1";
 }

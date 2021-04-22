@@ -26,6 +26,7 @@ import org.feup.cm.acmeapp.model.Purchase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -37,7 +38,6 @@ import com.google.zxing.common.BitMatrix;
 
 public class QRCheckoutFragment extends Fragment {
     private SharedViewModel sharedViewModel;
-    private List<Product> productList = new ArrayList<>();
     private Purchase purchase;
     ImageView qrCodeIv;
 
@@ -48,7 +48,6 @@ public class QRCheckoutFragment extends Fragment {
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
-        productList = sharedViewModel.getProductList();
         sharedViewModel.setProductList(null);
         purchase = sharedViewModel.getPurchase();
 
@@ -73,8 +72,8 @@ public class QRCheckoutFragment extends Fragment {
             }
         });
 
-        String s = "Qr info";//purchase.QRCodeString(sharedViewModel.getPersonalPrivateKey());
-        new Thread(new convertToQR(s)).start();
+
+        new Thread(new convertToQR(purchase.QRCodeString())).start();
         return root;
     }
 
@@ -86,8 +85,8 @@ public class QRCheckoutFragment extends Fragment {
     class convertToQR implements Runnable {
         String content;
 
-        convertToQR(String value) {
-            content = value;
+        convertToQR(String mess) {
+            content = mess;
         }
 
         @Override

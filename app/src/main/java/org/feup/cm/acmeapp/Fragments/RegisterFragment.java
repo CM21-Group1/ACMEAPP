@@ -16,13 +16,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
-import org.feup.cm.acmeapp.Security.Key;
-import org.feup.cm.acmeapp.SharedViewModel;
+import org.feup.cm.acmeapp.Security.KeyPart;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
@@ -37,22 +35,21 @@ import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+
 import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
-    private SharedViewModel sharedViewModel;
     private String username;
     private String password;
     private String name;
     private String payment_card;
+    private String publicKey;
     private View viewTemp;
     private ProgressBar spinner;
 
@@ -72,8 +69,6 @@ public class RegisterFragment extends Fragment {
         User user = getArguments().getParcelable("user");
 
         System.out.println(user.getName());
-
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +104,7 @@ public class RegisterFragment extends Fragment {
 
                     //Creates and stores the keys
                     createAndStoreKey();
-                    storeKeysViewModel();
+                    storePublicKey();
 
                     //Makes the request
                     new APIRequestCreateUser().execute();
@@ -171,9 +166,8 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    //Stores the created keys in the viewModel
-    private void storeKeysViewModel() {
-        byte[] modulosAux = null;
+    //Stores the created key
+    private void storePublicKey() {
         try {
             //Gets the KeyStore
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
@@ -182,31 +176,9 @@ public class RegisterFragment extends Fragment {
 
             //Creates the two adapter class keys
             PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            Key publickey = new Key(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray());
-            modulosAux = ((RSAPublicKey)pub).getModulus().toByteArray();
-
-            //Stores in the sharedViewModel
-            System.out.println("Faz print");
-            sharedViewModel.setPublicKey(publickey);
-
+            publicKey = new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
         }catch (Exception e){
             System.out.println(e + " in load of public the key");
-        }
-        try {
-            byte[] exp = null;
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-            PrivateKey priv = ((KeyStore.PrivateKeyEntry)entry).getPrivateKey();
-            exp = ((RSAPrivateKey)priv).getPrivateExponent().toByteArray();
-
-            Key privatekey = new Key(modulosAux,exp);
-
-            //Stores in the sharedViewModel
-            System.out.println("Faz print");
-            sharedViewModel.setPrivateKey(privatekey);
-        }catch (Exception e){
-            System.out.println(e + " in load of private the key");
         }
     }
 
@@ -221,13 +193,12 @@ public class RegisterFragment extends Fragment {
 
             try {
 
-
                 jsonBody = new JSONObject();
                 jsonBody.put("username", username);
                 jsonBody.put("password", password);
                 jsonBody.put("name", name);
                 jsonBody.put("payment_card", payment_card);
-                jsonBody.put("publicKey",sharedViewModel.getPubKey().toString());
+                jsonBody.put("publicKey",publicKey);
 
                 System.out.println(jsonBody);
 

@@ -2,11 +2,11 @@ package org.feup.cm.acmeapp.Security;
 
 import java.util.Arrays;
 
-public class Key {
+public class KeyPart {
     private byte[] modulus;
     private byte[] exponent;
 
-    public Key(byte[] modulus, byte[] exponent) {
+    public KeyPart(byte[] modulus, byte[] exponent) {
         this.modulus = modulus;
         this.exponent = exponent;
         this.toString();
