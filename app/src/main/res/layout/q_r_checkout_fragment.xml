@@ -11,11 +11,22 @@
         android:scaleType="center"
         android:contentDescription="@string/qr_code" />
 
-    <Button
-        android:id="@+id/complete_btn"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/finish" />
+        android:layout_marginHorizontal="50dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/complete_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textColor="@color/purple_200"
+            android:background="@drawable/buttons"
+            android:text="@string/finish"
+            android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>
