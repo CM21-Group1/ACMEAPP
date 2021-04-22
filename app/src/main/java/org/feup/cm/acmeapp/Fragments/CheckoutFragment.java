@@ -59,12 +59,9 @@ public class CheckoutFragment extends Fragment {
     private int totalNumProds = 0;
     private List<Voucher> voucherList = new ArrayList<>();
     private List<String> voucherItems = new ArrayList<>();
-    private String voucherIdChosen = null;
     private TextView totalWithVoucher;
     private TextView totalWithVoucherLabel;
-
-    private Voucher selectedVoucher;
-
+    private Voucher selectedVoucher = null;
     private final double percentage = 0.15;
     private double valueToSubtract = 0;
 
@@ -76,9 +73,6 @@ public class CheckoutFragment extends Fragment {
 
         productList = sharedViewModel.getProductList();
 
-        System.out.println("Get do product list: " + productList);
-
-        System.out.println(productList);
 
         for (Product product : productList) {
             totalAmount += product.getPrice();
@@ -101,46 +95,58 @@ public class CheckoutFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                List<String> voucherNames = new ArrayList<>();
-                for (Voucher voucherTemp : voucherList) {
-                    voucherNames.add(voucherTemp.get_id());
+                System.out.println(selectedVoucher);
+                if (selectedVoucher == null){
+                    List<String> voucherNames = new ArrayList<>();
+                    for (Voucher voucherTemp : voucherList) {
+                        voucherNames.add(voucherTemp.get_id());
+                    }
+                    CharSequence[] simpleArray = voucherNames.toArray(new CharSequence[voucherNames.size()]);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setTitle("Vouchers")
+                            .setSingleChoiceItems(simpleArray, -1,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedVoucher = voucherList.get(which);
+                                            System.out.println(selectedVoucher.get_id());
+                                        }
+                                    })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    System.out.println(selectedVoucher.get_id());
+                                    valueToSubtract = totalAmount * percentage;
+                                    totalAmount -= valueToSubtract;
+                                    totalWithVoucher.setText(totalAmount + "€");
+                                    totalWithVoucher.setVisibility(View.VISIBLE);
+                                    totalWithVoucherLabel.setVisibility(View.VISIBLE);
+                                    voucher_dialog.setText(getString(R.string.remove_Voucher));
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    selectedVoucher = null;
+                                    totalAmount += valueToSubtract;
+                                    totalWithVoucher.setText(totalAmount + "€");
+                                    totalWithVoucher.setVisibility(View.INVISIBLE);
+                                    totalWithVoucherLabel.setVisibility(View.INVISIBLE);
+                                }
+                            });
+
+                    builder.show();
+                }else{
+                    selectedVoucher = null;
+                    totalAmount += valueToSubtract;
+                    totalWithVoucher.setText(totalAmount + "€");
+                    totalWithVoucher.setVisibility(View.INVISIBLE);
+                    totalWithVoucherLabel.setVisibility(View.INVISIBLE);
+                    voucher_dialog.setText(getString(R.string.add_voucher));
                 }
-                CharSequence[] simpleArray = voucherNames.toArray(new CharSequence[voucherNames.size()]);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                builder.setTitle("Vouchers")
-                        .setSingleChoiceItems(simpleArray, -1,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        selectedVoucher = voucherList.get(which);
-                                        System.out.println(selectedVoucher.get_id());
-                                    }
-                                })
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                System.out.println(selectedVoucher.get_id());
-                                valueToSubtract = totalAmount * percentage;
-                                totalAmount -= valueToSubtract;
-                                totalWithVoucher.setText(totalAmount + "€");
-                                totalWithVoucher.setVisibility(View.VISIBLE);
-                                totalWithVoucherLabel.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                selectedVoucher = null;
-                                totalAmount += valueToSubtract;
-                                totalWithVoucher.setText(totalAmount + "€");
-                                totalWithVoucher.setVisibility(View.INVISIBLE);
-                                totalWithVoucherLabel.setVisibility(View.INVISIBLE);
-                            }
-                        });
-
-                builder.show();
             }
         });
 
