@@ -99,30 +99,35 @@ public class Purchase {
     }
 
    public String QRCodeString(){
-       /*String message = this.toString();
-       int nr = message.length();
-       byte[] messageAux = message.getBytes();*/
+        //Obtem a mensagem
+        String mensagem = this.toString();
 
-       ArrayList<String> sels = new ArrayList<>();
-       sels.add(this.toString());
+        //Obtem o tamanho da mensagem
+        int nr = mensagem.length();
+        System.out.println("Nr "+ nr);
 
-       System.out.println(sels);
+        //Cria o buffer e coloca nos primeiros 4 bytes (int) o tamanho da mensagem
+        ByteBuffer bb = ByteBuffer.allocate( (nr+4)+ Constants.KEY_SIZE/8);
+        bb.putInt(nr);
 
-       int nr = sels.get(0).length();
-       System.out.println("Nr "+ nr);
-       ByteBuffer bb = ByteBuffer.allocate((nr+4)+Constants.KEY_SIZE/8);
-       bb.putInt(nr);
+        //Coloca a mensagem no buffer
+        bb.put(mensagem.getBytes());
 
-       System.out.println("Sells get[0]");
-       System.out.println(sels.get(0));
-       System.out.println(bb.position());
+        System.out.println("Mensagem");
+        System.out.println(mensagem);
+        System.out.println("Tamanho da buffer ( 4+"+nr+"): " + bb.position());
 
-       bb.put(sels.get(0).getBytes());
-       System.out.println(bb.position());
 
-       System.out.println(bb);
+        byte[] message = bb.array();
 
-       byte[] message = bb.array();
+        byte[] aux = new byte[4];
+        aux[0] = message[0];
+        aux[1] = message[1];
+        aux[2] = message[2];
+        aux[3] = message[3];
+
+       nr = ByteBuffer.wrap(aux).getInt() ;
+       System.out.println("New nr verificações" + nr);
 
        String s = null;
 
@@ -134,49 +139,43 @@ public class Purchase {
            Signature sg = Signature.getInstance(Constants.SIGN_ALGO);
            sg.initSign(pri);
            sg.update(message, 0, nr+4);
-           int sz = sg.sign(message, nr+4, Constants.KEY_SIZE/8);
-           System.out.println(message);
-           System.out.println("Sign size = " + sz + " bytes.");
+           sg.sign(message, nr+4, Constants.KEY_SIZE/8);
 
-           s = new String(message, "UTF-8");
+           //mensagem criada
+           s = new String(message);
+           System.out.println(s);
 
 
            String error = "";
            boolean validated = false;
-           //StringBuilder sb = new StringBuilder();
+           byte[] message2 = s.getBytes();
 
-           message = s.getBytes();
+           byte[] aux2 = new byte[4];
+           aux2[0] = message2[0];
+           aux2[1] = message2[1];
+           aux2[2] = message2[2];
+           aux2[3] = message2[3];
 
-           byte[] aux = new byte[4];
-           aux[0] = message[0];
-           aux[1] = message[1];
-           aux[2] = message[2];
-           aux[3] = message[3];
-
-           nr = ByteBuffer.wrap(aux).getInt() ;                                           // get the nr of different products (first position)
+           nr = ByteBuffer.wrap(aux2).getInt() ;                                           // get the nr of different products (first position)
 
            System.out.println("New nr " + nr);
 
-           /*for (int k=4; k<=nr; k++) {
-               sb.append(new String(message[k]));                              // get the name of each product from the type
-           }*/
 
-           String ss = new String(Arrays.copyOfRange(message, 4, nr ));
+           String ss = new String(Arrays.copyOfRange(message2, 4, nr+4));
 
            System.out.println(ss);
 
            KeyFactory keyFactory = KeyFactory.getInstance("RSA");        // to build a key object we need a KeyFactory object
            // the key raw values (as BigIntegers) are used to build an appropriate KeySpec
-           RSAPublicKeySpec RSAPub = new RSAPublicKeySpec(new BigInteger(getPubKey().getModulus()), new BigInteger("65537"));
+           RSAPublicKeySpec RSAPub = new RSAPublicKeySpec(new BigInteger(getPubKey().getModulus()), new BigInteger(getPubKey().getExponent()));
            pubKey = keyFactory.generatePublic(RSAPub);                   // the KeyFactory is used to build the key object from the key spec
 
            if (pubKey == null)
                System.out.println("Missing key");
-               //sb.append("\nMissing pub key+.");
            else {
                byte[] mess = new byte[nr+1];                                // extract the order and the signature from the all message
                byte[] sign = new byte[Constants.KEY_SIZE/8];
-               ByteBuffer bb1 = ByteBuffer.wrap(message);
+               ByteBuffer bb1 = ByteBuffer.wrap(message2);
                bb1.get(mess, 0, nr+1);
                bb1.get(sign, 0, Constants.KEY_SIZE/8);
                try {
@@ -190,10 +189,6 @@ public class Purchase {
                    error = "\n" + ex.getMessage();
                }
            }
-          /* sb.append("\nValidated = ");
-           sb.append(validated);
-           sb.append(error);
-           System.out.println(sb.toString());   */                                 // show order and validation
        }catch (Exception e){
             System.out.println(e + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
