@@ -7,6 +7,7 @@ import org.feup.cm.acmeapp.Security.KeyPart;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyStore;
@@ -107,92 +108,73 @@ public class Purchase {
         System.out.println("Nr "+ nr);
 
         //Cria o buffer e coloca nos primeiros 4 bytes (int) o tamanho da mensagem
-        ByteBuffer bb = ByteBuffer.allocate( (nr+4)+ Constants.KEY_SIZE/8);
-        bb.putInt(nr);
+        ByteBuffer bb = ByteBuffer.allocate( (nr)+ Constants.KEY_SIZE/8);
 
         //Coloca a mensagem no buffer
         bb.put(mensagem.getBytes());
 
-        System.out.println("Mensagem");
         System.out.println(mensagem);
-        System.out.println("Tamanho da buffer ( 4+"+nr+"): " + bb.position());
+        System.out.println("Tamanho da buffer " + bb.position());
+
 
 
         byte[] message = bb.array();
 
-        byte[] aux = new byte[4];
-        aux[0] = message[0];
-        aux[1] = message[1];
-        aux[2] = message[2];
-        aux[3] = message[3];
 
-       nr = ByteBuffer.wrap(aux).getInt() ;
-       System.out.println("New nr verificações" + nr);
+        String s = null;
 
-       String s = null;
+        try {
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+            PrivateKey pri = ((KeyStore.PrivateKeyEntry)entry).getPrivateKey();
+            Signature sg = Signature.getInstance(Constants.SIGN_ALGO);
+            sg.initSign(pri);
+            sg.update(message, 0, nr);
+            sg.sign(message, nr, Constants.KEY_SIZE/8);
 
-       try {
-           KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-           ks.load(null);
-           KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-           PrivateKey pri = ((KeyStore.PrivateKeyEntry)entry).getPrivateKey();
-           Signature sg = Signature.getInstance(Constants.SIGN_ALGO);
-           sg.initSign(pri);
-           sg.update(message, 0, nr+4);
-           sg.sign(message, nr+4, Constants.KEY_SIZE/8);
-
-           //mensagem criada
-           s = new String(message);
-           System.out.println(s);
+            //mensagem criada
+            s = new String(message, Constants.ISO_SET);
+            System.out.println(s);
+            System.out.println("Tamanho da string criada: " + s.length());
 
 
-           String error = "";
-           boolean validated = false;
-           byte[] message2 = s.getBytes();
-
-           byte[] aux2 = new byte[4];
-           aux2[0] = message2[0];
-           aux2[1] = message2[1];
-           aux2[2] = message2[2];
-           aux2[3] = message2[3];
-
-           nr = ByteBuffer.wrap(aux2).getInt() ;                                           // get the nr of different products (first position)
-
-           System.out.println("New nr " + nr);
 
 
-           String ss = new String(Arrays.copyOfRange(message2, 4, nr+4));
 
-           System.out.println(ss);
+            String error = "";
+            boolean validated = false;
+            byte[] message2 =  s.getBytes(StandardCharsets.ISO_8859_1);
 
-           KeyFactory keyFactory = KeyFactory.getInstance("RSA");        // to build a key object we need a KeyFactory object
-           // the key raw values (as BigIntegers) are used to build an appropriate KeySpec
-           RSAPublicKeySpec RSAPub = new RSAPublicKeySpec(new BigInteger(getPubKey().getModulus()), new BigInteger(getPubKey().getExponent()));
-           pubKey = keyFactory.generatePublic(RSAPub);                   // the KeyFactory is used to build the key object from the key spec
 
-           if (pubKey == null)
-               System.out.println("Missing key");
-           else {
-               byte[] mess = new byte[nr+1];                                // extract the order and the signature from the all message
-               byte[] sign = new byte[Constants.KEY_SIZE/8];
-               ByteBuffer bb1 = ByteBuffer.wrap(message2);
-               bb1.get(mess, 0, nr+1);
-               bb1.get(sign, 0, Constants.KEY_SIZE/8);
-               try {
-                   Signature sg1 = Signature.getInstance("SHA256WithRSA");      // verify the signature with the public key
-                   sg1.initVerify(pubKey);
-                   sg1.update(mess);
-                   validated = sg1.verify(sign);
-                   System.out.println(validated);
-               }
-               catch (Exception ex) {
-                   error = "\n" + ex.getMessage();
-               }
-           }
-       }catch (Exception e){
-            System.out.println(e + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");        // to build a key object we need a KeyFactory object
+            // the key raw values (as BigIntegers) are used to build an appropriate KeySpec
+            RSAPublicKeySpec RSAPub = new RSAPublicKeySpec(new BigInteger(getPubKey().getModulus()), new BigInteger(getPubKey().getExponent()));
+            pubKey = keyFactory.generatePublic(RSAPub);                   // the KeyFactory is used to build the key object from the key spec
+
+            if (pubKey == null)
+                System.out.println("Missing key");
+            else {
+                byte[] mess = new byte[message2.length - Constants.KEY_SIZE/8];                                // extract the order and the signature from the all message
+                byte[] sign = new byte[Constants.KEY_SIZE/8];
+                ByteBuffer bb1 = ByteBuffer.wrap(message2);
+                bb1.get(mess, 0, message2.length - Constants.KEY_SIZE/8);
+                bb1.get(sign, 0, Constants.KEY_SIZE/8);
+                System.out.println(new String(mess, Constants.ISO_SET));
+                try {
+                    Signature sg1 = Signature.getInstance("SHA256WithRSA");      // verify the signature with the public key
+                    sg1.initVerify(pubKey);
+                    sg1.update(mess);
+                    validated = sg1.verify(sign);
+                    System.out.println(validated);
+                }
+                catch (Exception ex) {
+                    error = "\n" + ex.getMessage();
+                }
+            }
+        }catch (Exception e){
+            System.out.println(e);
         }
-
 
         return s;
     }
