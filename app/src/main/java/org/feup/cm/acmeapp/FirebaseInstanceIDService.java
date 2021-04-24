@@ -32,12 +32,16 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         System.out.println("From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().isEmpty()) {
-            showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
-        }else{
-            showNotification(remoteMessage.getData());
-        }
+        System.out.println(remoteMessage.getData().get("body"));
+
+        showNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"));
+
+//        // Check if message contains a data payload.
+//        if (remoteMessage.getData().isEmpty()) {
+//            showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+//        }else{
+//            showNotification(remoteMessage.getData());
+//        }
     }
 
     private void showNotification(Map<String, String> data){
@@ -47,18 +51,16 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "feup.cm.acmeapp";
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription("Code sphere");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.BLUE);
-            notificationChannel.enableLights(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
+        NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.setDescription("Code sphere");
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.BLUE);
+        notificationChannel.enableLights(true);
+        notificationManager.createNotificationChannel(notificationChannel);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 
-        notificationBuilder.setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL).setWhen(System.currentTimeMillis()).setContentTitle(title).setContentText(body).setContentInfo("Info");
+        notificationBuilder.setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL).setSmallIcon(R.drawable.ic_launcher_background).setWhen(System.currentTimeMillis()).setContentTitle(title).setContentText(body).setContentInfo("Info");
         notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
     }
 
@@ -66,14 +68,12 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "feup.cm.acmeapp";
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription("Code sphere");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.BLUE);
-            notificationChannel.enableLights(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
+        NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.setDescription("Code sphere");
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.BLUE);
+        notificationChannel.enableLights(true);
+        notificationManager.createNotificationChannel(notificationChannel);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
 
