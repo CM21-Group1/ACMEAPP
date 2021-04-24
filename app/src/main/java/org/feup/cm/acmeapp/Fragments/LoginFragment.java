@@ -193,12 +193,6 @@ public class LoginFragment extends Fragment {
                 spinner.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Password incorrect.", Toast.LENGTH_LONG).show();
             }else{
-//                try {
-//                    JSONObject jsonBody = new JSONObject(response);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
                 try {
                     JSONObject jsonBody = new JSONObject(response);
                     System.out.println(jsonBody);

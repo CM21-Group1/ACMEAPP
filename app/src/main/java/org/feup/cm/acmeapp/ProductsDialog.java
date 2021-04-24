@@ -24,7 +24,6 @@ public class ProductsDialog extends Dialog implements android.view.View.OnClickL
     private List<Product> productList;
     private CustomArrayAdapter adapter;
     private ListView list;
-    public final static int IMAGE_SIZE=540;
 
     public ProductsDialog(Activity a, List<Product> productList) {
         super(a);

@@ -1,14 +1,11 @@
 package org.feup.cm.acmeapp.model;
 
-import android.util.Log;
-
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.Security.KeyPart;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -16,9 +13,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +76,7 @@ public class Purchase {
     @Override
     public String toString() {
 
-        if(voucher != null){
+        if (voucher != null) {
             return "{" +
                     "\"userId\": \"" + userId + '\"' +
                     ", \"products\": " + products +
@@ -99,23 +93,22 @@ public class Purchase {
 
     }
 
-   public String QRCodeString(){
+    public String QRCodeString() {
         //Obtem a mensagem
         String mensagem = this.toString();
 
         //Obtem o tamanho da mensagem
         int nr = mensagem.length();
-        System.out.println("Nr "+ nr);
+        System.out.println("Nr " + nr);
 
         //Cria o buffer e coloca nos primeiros 4 bytes (int) o tamanho da mensagem
-        ByteBuffer bb = ByteBuffer.allocate( (nr)+ Constants.KEY_SIZE/8);
+        ByteBuffer bb = ByteBuffer.allocate((nr) + Constants.KEY_SIZE / 8);
 
         //Coloca a mensagem no buffer
         bb.put(mensagem.getBytes());
 
         System.out.println(mensagem);
         System.out.println("Tamanho da buffer " + bb.position());
-
 
 
         byte[] message = bb.array();
@@ -127,11 +120,11 @@ public class Purchase {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
             ks.load(null);
             KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-            PrivateKey pri = ((KeyStore.PrivateKeyEntry)entry).getPrivateKey();
+            PrivateKey pri = ((KeyStore.PrivateKeyEntry) entry).getPrivateKey();
             Signature sg = Signature.getInstance(Constants.SIGN_ALGO);
             sg.initSign(pri);
             sg.update(message, 0, nr);
-            sg.sign(message, nr, Constants.KEY_SIZE/8);
+            sg.sign(message, nr, Constants.KEY_SIZE / 8);
 
             //mensagem criada
             s = new String(message, Constants.ISO_SET);
@@ -139,12 +132,9 @@ public class Purchase {
             System.out.println("Tamanho da string criada: " + s.length());
 
 
-
-
-
-            String error = "";
+            /*String error = ""; Descomentar e ira fazer a validação
             boolean validated = false;
-            byte[] message2 =  s.getBytes(StandardCharsets.ISO_8859_1);
+            byte[] message2 = s.getBytes(StandardCharsets.ISO_8859_1);
 
 
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");        // to build a key object we need a KeyFactory object
@@ -155,11 +145,11 @@ public class Purchase {
             if (pubKey == null)
                 System.out.println("Missing key");
             else {
-                byte[] mess = new byte[message2.length - Constants.KEY_SIZE/8];                                // extract the order and the signature from the all message
-                byte[] sign = new byte[Constants.KEY_SIZE/8];
+                byte[] mess = new byte[message2.length - Constants.KEY_SIZE / 8];                                // extract the order and the signature from the all message
+                byte[] sign = new byte[Constants.KEY_SIZE / 8];
                 ByteBuffer bb1 = ByteBuffer.wrap(message2);
-                bb1.get(mess, 0, message2.length - Constants.KEY_SIZE/8);
-                bb1.get(sign, 0, Constants.KEY_SIZE/8);
+                bb1.get(mess, 0, message2.length - Constants.KEY_SIZE / 8);
+                bb1.get(sign, 0, Constants.KEY_SIZE / 8);
                 System.out.println(new String(mess, Constants.ISO_SET));
                 try {
                     Signature sg1 = Signature.getInstance("SHA256WithRSA");      // verify the signature with the public key
@@ -167,30 +157,28 @@ public class Purchase {
                     sg1.update(mess);
                     validated = sg1.verify(sign);
                     System.out.println(validated);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     error = "\n" + ex.getMessage();
                 }
-            }
-        }catch (Exception e){
+            }*/
+        } catch (Exception e) {
             System.out.println(e);
         }
 
         return s;
     }
 
-    KeyPart getPubKey() {
+    /*KeyPart getPubKey() {
         KeyPart pkey = null;
         try {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
             ks.load(null);
             KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-            PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            pkey = new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(), ((RSAPublicKey)pub).getPublicExponent().toByteArray());
-        }
-        catch (Exception ex) {
+            PublicKey pub = ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey();
+            pkey = new KeyPart(((RSAPublicKey) pub).getModulus().toByteArray(), ((RSAPublicKey) pub).getPublicExponent().toByteArray());
+        } catch (Exception ex) {
             System.out.println(ex);
         }
         return pkey;
-    }
+    }*/
 }

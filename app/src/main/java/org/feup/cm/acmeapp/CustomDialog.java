@@ -24,7 +24,6 @@ public class CustomDialog extends Dialog implements android.view.View.OnClickLis
     private List<Product> productList;
     private CustomArrayAdapter adapter;
     private ListView list;
-    public final static int IMAGE_SIZE=540;
 
     public CustomDialog(Activity a, List<Product> productList) {
         super(a);
