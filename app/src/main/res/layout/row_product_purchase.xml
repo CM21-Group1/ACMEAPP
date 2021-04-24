@@ -25,8 +25,8 @@
                     android:id="@+id/product_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Product Name"
-                    android:textSize="18dp"
+                    android:text="@string/product_name"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Product Price" />
+                    android:text="@string/product_price" />
             </TableRow>
 
         </TableLayout>

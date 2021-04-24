@@ -28,10 +28,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.CustomDialog;
+import org.feup.cm.acmeapp.MainActivity;
 import org.feup.cm.acmeapp.ProductsDialog;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
@@ -103,6 +107,18 @@ public class HomeFragment extends Fragment {
 
         userId = settings.getString(Constants.PREF_USERID, "");
         //System.out.println(userId);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(userId)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "MESSAGE";
+                        if (!task.isSuccessful()) {
+                            msg = "NOT MESSAGE";
+                        }
+                        //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         list = root.findViewById(R.id.purchases_listview);
         list.setEmptyView(root.findViewById(R.id.empty_list));
