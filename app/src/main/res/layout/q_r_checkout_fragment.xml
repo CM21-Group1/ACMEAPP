@@ -10,12 +10,6 @@
         android:layout_height="wrap_content"
         android:scaleType="center"
         android:contentDescription="@string/qr_code" />
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"

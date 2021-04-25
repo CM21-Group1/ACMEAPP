@@ -52,7 +52,6 @@ public class QRCheckoutFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private Purchase purchase;
     ImageView qrCodeIv;
-    private ProgressBar spinner;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -60,8 +59,6 @@ public class QRCheckoutFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
-        spinner = root.findViewById(R.id.progressBar);
-        spinner.setVisibility(View.VISIBLE);
 
         sharedViewModel.setProductList(null);
         purchase = sharedViewModel.getPurchase();
@@ -117,7 +114,6 @@ public class QRCheckoutFragment extends Fragment {
 
             bitmap = encodeAsBitmap(content);
             getActivity().runOnUiThread(()->qrCodeIv.setImageBitmap(bitmap));
-            spinner.setVisibility(View.GONE);
         }
     }
 
