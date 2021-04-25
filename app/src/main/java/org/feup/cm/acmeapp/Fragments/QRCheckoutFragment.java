@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
@@ -26,7 +28,17 @@ import org.feup.cm.acmeapp.model.Purchase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -40,6 +52,7 @@ public class QRCheckoutFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private Purchase purchase;
     ImageView qrCodeIv;
+    private ProgressBar spinner;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,6 +60,8 @@ public class QRCheckoutFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.q_r_checkout_fragment, container, false);
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        spinner = root.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
 
         sharedViewModel.setProductList(null);
         purchase = sharedViewModel.getPurchase();
@@ -95,6 +110,7 @@ public class QRCheckoutFragment extends Fragment {
 
             bitmap = encodeAsBitmap(content);
             getActivity().runOnUiThread(()->qrCodeIv.setImageBitmap(bitmap));
+            spinner.setVisibility(View.GONE);
         }
     }
 

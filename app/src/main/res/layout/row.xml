@@ -37,10 +37,10 @@
 
                 <ImageButton
                     android:id="@+id/delete_product"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
                     android:layout_gravity="end"
                     android:background="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
                     android:backgroundTint="@color/white"
                     android:src="@drawable/outline_delete_black_20"
                     android:contentDescription="@string/delete_item" />

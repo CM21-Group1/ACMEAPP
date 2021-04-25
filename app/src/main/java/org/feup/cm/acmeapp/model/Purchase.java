@@ -1,18 +1,26 @@
 package org.feup.cm.acmeapp.model;
 
+import android.util.Base64;
+
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.Security.KeyPart;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -99,7 +107,7 @@ public class Purchase {
 
         //Obtem o tamanho da mensagem
         int nr = mensagem.length();
-        System.out.println("Nr " + nr);
+        //System.out.println("Nr " + nr);
 
         //Cria o buffer e coloca nos primeiros 4 bytes (int) o tamanho da mensagem
         ByteBuffer bb = ByteBuffer.allocate((nr) + Constants.KEY_SIZE / 8);
@@ -107,8 +115,8 @@ public class Purchase {
         //Coloca a mensagem no buffer
         bb.put(mensagem.getBytes());
 
-        System.out.println(mensagem);
-        System.out.println("Tamanho da buffer " + bb.position());
+        //System.out.println(mensagem);
+        //System.out.println("Tamanho da buffer " + bb.position());
 
 
         byte[] message = bb.array();
@@ -128,11 +136,11 @@ public class Purchase {
 
             //mensagem criada
             s = new String(message, Constants.ISO_SET);
-            System.out.println(s);
-            System.out.println("Tamanho da string criada: " + s.length());
+            //System.out.println(s);
+            //System.out.println("Tamanho da string criada: " + s.length());
 
 
-            /*String error = ""; Descomentar e ira fazer a validação
+            String error = "";
             boolean validated = false;
             byte[] message2 = s.getBytes(StandardCharsets.ISO_8859_1);
 
@@ -141,6 +149,9 @@ public class Purchase {
             // the key raw values (as BigIntegers) are used to build an appropriate KeySpec
             RSAPublicKeySpec RSAPub = new RSAPublicKeySpec(new BigInteger(getPubKey().getModulus()), new BigInteger(getPubKey().getExponent()));
             pubKey = keyFactory.generatePublic(RSAPub);                   // the KeyFactory is used to build the key object from the key spec
+            //with 0x30 (ASN.1 SEQUENCE and CONSTRUCTED), so there is no leading 0x00 to drop.
+            String base64Encoded = Base64.encodeToString(pubKey.getEncoded(), Base64.DEFAULT);
+            System.out.println(base64Encoded);
 
             if (pubKey == null)
                 System.out.println("Missing key");
@@ -152,15 +163,17 @@ public class Purchase {
                 bb1.get(sign, 0, Constants.KEY_SIZE / 8);
                 System.out.println(new String(mess, Constants.ISO_SET));
                 try {
-                    Signature sg1 = Signature.getInstance("SHA256WithRSA");      // verify the signature with the public key
+                    Signature sg1 = Signature.getInstance(Constants.SIGN_ALGO);      // verify the signature with the public key
                     sg1.initVerify(pubKey);
                     sg1.update(mess);
                     validated = sg1.verify(sign);
                     System.out.println(validated);
+                    String encoded = java.util.Base64.getEncoder().encodeToString(sign);
+                    System.out.println(encoded);
                 } catch (Exception ex) {
                     error = "\n" + ex.getMessage();
                 }
-            }*/
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -168,7 +181,7 @@ public class Purchase {
         return s;
     }
 
-    /*KeyPart getPubKey() {
+    public KeyPart getPubKey() {
         KeyPart pkey = null;
         try {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
@@ -180,5 +193,5 @@ public class Purchase {
             System.out.println(ex);
         }
         return pkey;
-    }*/
+    }
 }

@@ -3,8 +3,12 @@ package org.feup.cm.acmeapp.Fragments;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -22,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -72,6 +77,50 @@ public class VouchersFragment extends Fragment {
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
         sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
+//        TODO
+//         Check internet connection dialog. Only dismiss if the internet connection back online again
+//         Do this dialog in every fragment to check connection
+//         ######################################################################################################################
+        if (!isOnline()) {
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Info");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setMessage("Internet not available, Cross check your internet connectivity and try again");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Retry", null);
+
+                AlertDialog dialog = builder.create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                // TODO Do something
+                                if (isOnline()) {
+                                    new APIRequestGetVouchers().execute();
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                    }
+                });
+
+                dialog.show();
+            } catch (Exception e) {
+                System.out.println();
+            }
+        }
+        // TODO
+        //  #########################################################################################################################
+
         setHasOptionsMenu(true);
         spinner = root.findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
@@ -108,10 +157,20 @@ public class VouchersFragment extends Fragment {
         list.setEmptyView(root.findViewById(R.id.empty_list));
         adapter = new CustomArrayAdapter(getContext(), 0, voucherList);
 
-        // Get all purchases from customer from user id
+        // Get all vouchers from customer from user id
         new APIRequestGetVouchers().execute();
 
         return root;
+    }
+
+    public boolean isOnline() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //we are connected to a network
+        connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+
+        return connected;
     }
 
     @Override

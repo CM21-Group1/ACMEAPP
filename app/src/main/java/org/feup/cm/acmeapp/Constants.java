@@ -4,7 +4,7 @@ public class Constants {
     public static final int KEY_SIZE = 512;
     public static final String ANDROID_KEYSTORE = "AndroidKeyStore";
     public static final String KEY_ALGO = "RSA";
-    public static final String SIGN_ALGO = "SHA256WithRSA";
+    public static final String SIGN_ALGO = "SHA256withRSA";
     public static String keyname = "myIdKey";
     public static final String PREFS_NAME = "preferences";
     public static final String PREF_UNAME = "Username";

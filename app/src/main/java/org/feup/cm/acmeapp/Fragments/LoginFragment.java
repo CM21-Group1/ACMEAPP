@@ -2,8 +2,12 @@ package org.feup.cm.acmeapp.Fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -58,6 +62,49 @@ public class LoginFragment extends Fragment {
         final Button buttonLogin = root.findViewById(R.id.login_btn);
         final Button buttonSignUp = root.findViewById(R.id.register_btn);
 
+//        TODO
+//         Check internet connection dialog. Only dismiss if the internet connection back online again
+//         Do this dialog in every fragment to check connection
+//         ######################################################################################################################
+        if(!isOnline()){
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Info");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setMessage("Internet not available, Cross check your internet connectivity and try again");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Retry", null);
+
+                AlertDialog dialog = builder.create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                // TODO Do something
+                                if(isOnline()){
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                    }
+                });
+
+                dialog.show();
+            } catch (Exception e) {
+                System.out.println();
+            }
+        }
+        // TODO
+        //  #########################################################################################################################
+
         username_edittext = root.findViewById(R.id.edit_username);
         password_edittext = root.findViewById(R.id.edit_pwd);
         spinner = root.findViewById(R.id.progressBar);
@@ -101,6 +148,16 @@ public class LoginFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public boolean isOnline() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //we are connected to a network
+        connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+
+        return connected;
     }
 
     @Override

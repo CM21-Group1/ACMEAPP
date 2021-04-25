@@ -1,32 +1,32 @@
 package org.feup.cm.acmeapp.Fragments;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,8 +34,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.feup.cm.acmeapp.Constants;
-import org.feup.cm.acmeapp.CustomDialog;
-import org.feup.cm.acmeapp.MainActivity;
 import org.feup.cm.acmeapp.ProductsDialog;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
@@ -78,6 +76,50 @@ public class HomeFragment extends Fragment {
 
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.home);
+
+//        TODO
+//         Check internet connection dialog. Only dismiss if the internet connection back online again
+//         Do this dialog in every fragment to check connection
+//         ######################################################################################################################
+        if (!isOnline()) {
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Info");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setMessage("Internet not available, Cross check your internet connectivity and try again");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Retry", null);
+
+                AlertDialog dialog = builder.create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                // TODO Do something
+                                if (isOnline()) {
+                                    new APIRequest().execute();
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                    }
+                });
+
+                dialog.show();
+            } catch (Exception e) {
+                System.out.println();
+            }
+        }
+        // TODO
+        //  #########################################################################################################################
 
         setHasOptionsMenu(true);
         spinner = root.findViewById(R.id.progressBar);
@@ -144,6 +186,17 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
+    public boolean isOnline() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //we are connected to a network
+        connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+
+        return connected;
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -251,8 +304,7 @@ public class HomeFragment extends Fragment {
 
                     List<Product> productsList = new ArrayList<>();
                     JSONArray products = (JSONArray) purchaseJson.get("products");
-                    for (int j = 0; j < products.length(); j++)
-                    {
+                    for (int j = 0; j < products.length(); j++) {
                         String _id = products.getJSONObject(j).getString("_id");
                         String name = products.getJSONObject(j).getString("name");
                         String price = products.getJSONObject(j).getString("price");
