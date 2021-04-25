@@ -101,13 +101,13 @@ public class Purchase {
 
     }
 
-    public String QRCodeString() {
+    public byte[] QRCodeString() {
         //Obtem a mensagem
         String mensagem = this.toString();
 
         //Obtem o tamanho da mensagem
         int nr = mensagem.length();
-        //System.out.println("Nr " + nr);
+
 
         //Cria o buffer e coloca nos primeiros 4 bytes (int) o tamanho da mensagem
         ByteBuffer bb = ByteBuffer.allocate((nr) + Constants.KEY_SIZE / 8);
@@ -140,7 +140,6 @@ public class Purchase {
             //System.out.println("Tamanho da string criada: " + s.length());
 
 
-            String error = "";
             boolean validated = false;
             byte[] message2 = s.getBytes(StandardCharsets.ISO_8859_1);
 
@@ -171,17 +170,18 @@ public class Purchase {
                     String encoded = java.util.Base64.getEncoder().encodeToString(sign);
                     System.out.println(encoded);
                 } catch (Exception ex) {
-                    error = "\n" + ex.getMessage();
+                    System.out.println(ex);//error = "\n" + ex.getMessage();
                 }
             }
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        return s;
+        return message;
     }
 
-    public KeyPart getPubKey() {
+
+    private KeyPart getPubKey() {
         KeyPart pkey = null;
         try {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);

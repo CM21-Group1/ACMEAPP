@@ -117,12 +117,7 @@ public class ShoppingCartFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 //QR Code Scan
-
-                //For testing
-                productList.add(new Product("Teste", "test", Math.random()));
-
-                updateProductList();
-                //scan(true);
+                scan(true);
             }
         });
 
@@ -145,6 +140,9 @@ public class ShoppingCartFragment extends Fragment{
 
         //Get the public key from supermarket
         new APIRequestPublicKey().execute();
+
+        //teste (remove)
+        productList.add(new Product("Teste", "test", Math.random()));
 
         updateProductList();
 

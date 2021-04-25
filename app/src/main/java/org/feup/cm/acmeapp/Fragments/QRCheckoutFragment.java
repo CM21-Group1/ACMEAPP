@@ -100,8 +100,15 @@ public class QRCheckoutFragment extends Fragment {
     class convertToQR implements Runnable {
         String content;
 
-        convertToQR(String mess) {
-            content = mess;
+        convertToQR(byte[] mess) {
+            try {
+                content = new String(mess, Constants.ISO_SET);
+                System.out.println(content);
+                System.out.println("Tamanho mensagem QR" + content.length());
+            }catch (Exception e){
+
+            }
+
         }
 
         @Override
@@ -115,11 +122,12 @@ public class QRCheckoutFragment extends Fragment {
     }
 
     Bitmap encodeAsBitmap(String str) {
+        System.out.println("Mensagem Bitmap" + str);
         BitMatrix result;
         Hashtable<EncodeHintType, String> hints = new Hashtable<>();
-        hints.put(EncodeHintType.CHARACTER_SET, "ISO_SET");
+        hints.put(EncodeHintType.CHARACTER_SET, Constants.ISO_SET);
         try {
-            result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, Constants.IMAGE_SIZE, Constants.IMAGE_SIZE, null);
+            result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, Constants.IMAGE_SIZE, Constants.IMAGE_SIZE, hints);
         }
         catch (Exception exc) {
             System.out.println(exc.getMessage());

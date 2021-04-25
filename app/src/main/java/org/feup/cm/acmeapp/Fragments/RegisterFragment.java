@@ -147,7 +147,7 @@ public class RegisterFragment extends Fragment {
 
                     //Creates and stores the keys
                     createAndStoreKey();
-                    storePublicKey();
+                    getPublicKey();
 
                     //Makes the request
                     new APIRequestCreateUser().execute();
@@ -193,7 +193,6 @@ public class RegisterFragment extends Fragment {
 
     //Creates and stores the user private and public key and stores them in the keystore
     private void createAndStoreKey(){
-        System.out.println("Creates keys!!!!!!!!!");
         try {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
             ks.load(null);
@@ -221,7 +220,7 @@ public class RegisterFragment extends Fragment {
     }
 
     //Stores the created key
-    private void storePublicKey() {
+    private void getPublicKey() {
         try {
             //Gets the KeyStore
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);

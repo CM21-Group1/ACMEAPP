@@ -14,6 +14,7 @@ public class Constants {
     public static final String baseUrl = "https://acmeapi-cm.herokuapp.com";
     public static final String vouchersUrl = "/sp/vouchers/";
     public static final String registerUrl = "/auth/register";
+    public static final String updateUserPublicKey = "/auth/userPkChanged/";
     public static final String loginUrl = "/auth/login";
     public static final String purchaseUrl = "/sp/purchase/";
     public static final String publicKeyUrl = "/sp/getpublickey";

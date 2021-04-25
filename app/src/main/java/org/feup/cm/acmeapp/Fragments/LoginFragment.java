@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.security.KeyPairGeneratorSpec;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
+import org.feup.cm.acmeapp.Security.KeyPart;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
@@ -35,7 +37,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import javax.security.auth.x500.X500Principal;
 
 public class LoginFragment extends Fragment {
 
@@ -45,6 +58,7 @@ public class LoginFragment extends Fragment {
     private EditText username_edittext;
     private EditText password_edittext;
 
+    private String publicKey;
 
     private final String DefaultUnameValue = "";
     private String UnameValue;
@@ -131,7 +145,11 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(), "Password empty", Toast.LENGTH_LONG).show();
                 }else{
                     viewTemp = view;
-                    savePreferences();
+
+                    //Creates and stores the keys
+                    createAndStoreKey();
+                    getPublicKey();
+
                     new APIRequest().execute();
                 }
 
@@ -212,6 +230,7 @@ public class LoginFragment extends Fragment {
                 jsonBody = new JSONObject();
                 jsonBody.put("username", username);
                 jsonBody.put("password", password);
+                jsonBody.put("publicKey",publicKey);
 
                 requestBody = Utils.buildPostParameters(jsonBody);
                 urlConnection = (HttpURLConnection) Utils.makeRequest("POST", Constants.baseUrl + Constants.loginUrl, null, "application/json", requestBody);
@@ -254,8 +273,12 @@ public class LoginFragment extends Fragment {
                     JSONObject jsonBody = new JSONObject(response);
                     System.out.println(jsonBody);
                     SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();
 
+                    //Saves the new user information
+                    savePreferences();
+
+                    //Also saves the id and supermarket public key
+                    SharedPreferences.Editor editor = settings.edit();
                     editor.putString(Constants.PREF_USERID, jsonBody.get("id").toString());
                     editor.putString(Constants.PREF_PUBLICKEYSP, jsonBody.get("superPKey").toString());
                     editor.apply();
@@ -267,5 +290,51 @@ public class LoginFragment extends Fragment {
             }
         }
     }
+
+
+    //Creates and stores the user private and public key and stores them in the keystore igual no login, fazer refactor
+    private void createAndStoreKey(){
+        try {
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+
+            Calendar start = new GregorianCalendar();
+            Calendar end = new GregorianCalendar();
+            end.add(Calendar.YEAR, 20);
+            KeyPairGenerator kgen = KeyPairGenerator.getInstance(Constants.KEY_ALGO, Constants.ANDROID_KEYSTORE);
+            AlgorithmParameterSpec spec = new KeyPairGeneratorSpec.Builder(getContext())
+                    .setKeySize(Constants.KEY_SIZE)
+                    .setAlias(Constants.keyname)
+                    .setSubject(new X500Principal("CN=" + Constants.keyname))
+                    .setSerialNumber(BigInteger.valueOf(12121212))
+                    .setStartDate(start.getTime())
+                    .setEndDate(end.getTime())
+                    .build();
+
+            kgen.initialize(spec);
+            KeyPair kp = kgen.generateKeyPair();
+
+        }catch (Exception e){
+            System.out.println(e + " in creation of the key");
+        }
+    }
+
+    //Stores the created key
+    private void getPublicKey() {
+        try {
+            //Gets the KeyStore
+            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            ks.load(null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+
+            //Creates the two adapter class keys
+            PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
+            publicKey = new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
+        }catch (Exception e){
+            System.out.println(e + " in load of public the key");
+        }
+    }
+
 }
 
