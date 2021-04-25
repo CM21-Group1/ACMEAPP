@@ -91,6 +91,9 @@ public class CheckoutFragment extends Fragment {
         totalWithVoucherLabel.setVisibility(View.INVISIBLE);
 
         Button voucher_dialog = root.findViewById(R.id.voucher_dialog);
+        if(voucherList.isEmpty()){
+            voucher_dialog.setVisibility(View.GONE);
+        }
         voucher_dialog.setOnClickListener(new View.OnClickListener() {
 
             @Override
