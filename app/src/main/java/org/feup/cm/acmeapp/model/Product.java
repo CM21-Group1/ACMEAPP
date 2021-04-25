@@ -47,12 +47,17 @@ public class Product {
         }
     }
 
+    public int getQuantity(){
+        return quantity;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"_id\": \"" + productCode + '\"' +
                 ", \"name\": \"" + name + '\"' +
                 ", \"price\": " + price +
+                ", \"quantity\": " + quantity+
                 '}';
     }
 }

@@ -37,6 +37,7 @@ import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.ProductDecrypter;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -215,7 +216,7 @@ public class ShoppingCartFragment extends Fragment{
                 ProductDecrypter productDecrypter = null;
                 try {
                     productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
-                } catch (BadPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | UnsupportedEncodingException | NoSuchPaddingException | InvalidKeyException | IllegalArgumentException e) {
+                } catch (BadPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | UnsupportedEncodingException | NoSuchPaddingException | InvalidKeyException | IllegalArgumentException | JSONException e) {
                     e.printStackTrace();
                     error = true;
                 }
@@ -224,8 +225,23 @@ public class ShoppingCartFragment extends Fragment{
                     System.out.println("QR Invalido");
                 }
                 if (productDecrypter!= null){
-                    //Adds the product to the product list
-                    productList.add(productDecrypter.getProduct());
+                    //Aux variable if the product exists
+                    Boolean productExists = false;
+                    System.out.println(productDecrypter.getProduct());
+                    for (Product pr : productList){
+                        //if the product already exists increases the quantity
+                        System.out.println(pr);
+                        if (pr.getProductCode().equals(productDecrypter.getProduct().getProductCode())){
+                            pr.increaseQuantity();
+                            productExists = true;
+                        }
+                    }
+
+                    if (!productExists){
+                        //Adds the product to the product list
+                        productList.add(productDecrypter.getProduct());
+                    }
+
                     updateProductList();
                 }
 
@@ -259,6 +275,7 @@ public class ShoppingCartFragment extends Fragment{
 
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
             ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
+            ((TextView) row.findViewById(R.id.product_quantity)).setText(String.valueOf(productList.get(position).getQuantity()) );
 
             ImageButton deleteBtn = row.findViewById(R.id.delete_product);
             deleteBtn.setOnClickListener(new View.OnClickListener() {

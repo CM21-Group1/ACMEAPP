@@ -103,7 +103,7 @@ public class QRCheckoutFragment extends Fragment {
                 System.out.println(content);
                 System.out.println("Tamanho mensagem QR" + content.length());
             }catch (Exception e){
-
+                System.out.println(e);
             }
 
         }

@@ -59,6 +59,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/product_price" />
+
+                <org.feup.cm.acmeapp.customfont.MyTextView
+                    android:id="@+id/product_quantity"
+                    android:gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/product_quantity" />
             </TableRow>
 
         </TableLayout>

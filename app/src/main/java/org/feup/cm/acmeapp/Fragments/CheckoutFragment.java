@@ -76,9 +76,9 @@ public class CheckoutFragment extends Fragment {
 
         for (Product product : productList) {
             totalAmount += product.getPrice();
+            totalNumProds = totalNumProds + product.getQuantity();
         }
 
-        totalNumProds = productList.size();
 
         TextView txt_total = root.findViewById(R.id.totalPrice);
         txt_total.setText(totalAmount + "€");
@@ -199,7 +199,7 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        new APIRequest().execute();
+        new APIRequestGetVouchers().execute();
         return root;
     }
 
@@ -208,7 +208,7 @@ public class CheckoutFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private class APIRequest extends AsyncTask<Void, Void, String> {
+    private class APIRequestGetVouchers extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
