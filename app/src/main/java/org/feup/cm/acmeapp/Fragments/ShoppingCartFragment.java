@@ -184,7 +184,7 @@ public class ShoppingCartFragment extends Fragment{
             startActivityForResult(intent, 0);
         }
         catch (ActivityNotFoundException anfe) {
-            //showDialog(this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+            showDialog(getActivity(), "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
         }
     }
 

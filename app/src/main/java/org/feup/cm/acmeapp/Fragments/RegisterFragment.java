@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.security.KeyPairGeneratorSpec;
-import android.util.Base64;
+import java.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -229,7 +229,7 @@ public class RegisterFragment extends Fragment {
 
             //Creates the two adapter class keys
             PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            publicKey = new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
+            publicKey = Base64.getEncoder().encodeToString(pub.getEncoded());//new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
         }catch (Exception e){
             System.out.println(e + " in load of public the key");
         }

@@ -45,6 +45,7 @@ import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -326,7 +327,7 @@ public class LoginFragment extends Fragment {
 
             //Creates the two adapter class keys
             PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            publicKey = new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
+            publicKey = Base64.getEncoder().encodeToString(pub.getEncoded());//new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
         }catch (Exception e){
             System.out.println(e + " in load of public the key");
         }
