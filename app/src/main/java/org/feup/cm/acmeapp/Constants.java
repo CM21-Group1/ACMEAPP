@@ -1,7 +1,7 @@
 package org.feup.cm.acmeapp;
 
 public class Constants {
-    public static final int KEY_SIZE = 512;
+    public static final int KEY_SIZE = 2048;
     public static final String ANDROID_KEYSTORE = "AndroidKeyStore";
     public static final String KEY_ALGO = "RSA";
     public static final String SIGN_ALGO = "SHA256withRSA";
@@ -21,4 +21,5 @@ public class Constants {
     public static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final int IMAGE_SIZE=900;
     public static final String ISO_SET = "ISO-8859-1";
+    public static final String ENC_ALGO = "RSA/NONE/PKCS1Padding";
 }

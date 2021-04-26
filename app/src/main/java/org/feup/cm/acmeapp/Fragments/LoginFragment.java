@@ -295,10 +295,6 @@ public class LoginFragment extends Fragment {
     //Creates and stores the user private and public key and stores them in the keystore igual no login, fazer refactor
     private void createAndStoreKey(){
         try {
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-
             Calendar start = new GregorianCalendar();
             Calendar end = new GregorianCalendar();
             end.add(Calendar.YEAR, 20);

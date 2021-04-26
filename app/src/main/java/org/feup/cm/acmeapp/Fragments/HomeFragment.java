@@ -308,7 +308,8 @@ public class HomeFragment extends Fragment {
                         String _id = products.getJSONObject(j).getString("_id");
                         String name = products.getJSONObject(j).getString("name");
                         String price = products.getJSONObject(j).getString("price");
-                        Product product = new Product(_id, name, Double.parseDouble(price));
+                        //String url = products.getJSONObject(j).getString("url");
+                        Product product = new Product(_id, name, Double.parseDouble(price), "Falta URL");
 
                         productsList.add(product);
                     }

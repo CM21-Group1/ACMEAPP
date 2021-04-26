@@ -68,7 +68,7 @@ public class ShoppingCartFragment extends Fragment{
     private ListView list;
     private List<Product> productList = new ArrayList<>();
     private CustomArrayAdapter adapter;
-    private PublicKey supermakerPublicKey;
+    private String supermakerPublicKey;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -140,10 +140,11 @@ public class ShoppingCartFragment extends Fragment{
         list.setEmptyView(root.findViewById(R.id.empty_list));
 
         //Get the public key from supermarket
-        new APIRequestPublicKey().execute();
+        SharedPreferences settings = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        supermakerPublicKey = settings.getString(Constants.PREF_PUBLICKEYSP, "");
 
         //teste (remove)
-        productList.add(new Product("Teste", "test", Math.random()));
+        productList.add(new Product("Teste", "test", Math.random(), "teste"));
 
         updateProductList();
 
@@ -209,17 +210,13 @@ public class ShoppingCartFragment extends Fragment{
                 //Gets the contents of the qr
                 String contents = data.getStringExtra("SCAN_RESULT");
 
+                System.out.println("Conteudo QR:" +contents);
+
                 //Bool error reading QR
                 Boolean error = false;
 
                 //Creates the ProductDecrypter
-                ProductDecrypter productDecrypter = null;
-                try {
-                    productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);
-                } catch (BadPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | UnsupportedEncodingException | NoSuchPaddingException | InvalidKeyException | IllegalArgumentException | JSONException e) {
-                    e.printStackTrace();
-                    error = true;
-                }
+                ProductDecrypter productDecrypter = new ProductDecrypter(supermakerPublicKey, contents);;
 
                 if (error){
                     System.out.println("QR Invalido");
@@ -227,7 +224,6 @@ public class ShoppingCartFragment extends Fragment{
                 if (productDecrypter!= null){
                     //Aux variable if the product exists
                     Boolean productExists = false;
-                    System.out.println(productDecrypter.getProduct());
                     for (Product pr : productList){
                         //if the product already exists increases the quantity
                         System.out.println(pr);
@@ -294,7 +290,7 @@ public class ShoppingCartFragment extends Fragment{
         }
     }
 
-    private class APIRequestPublicKey extends AsyncTask<Void, Void, String> {
+    /*private class APIRequestPublicKey extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -347,5 +343,5 @@ public class ShoppingCartFragment extends Fragment{
             }
 
         }
-    }
+    }*/
 }

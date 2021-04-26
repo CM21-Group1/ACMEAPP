@@ -136,11 +136,12 @@ public class Purchase {
 
             //mensagem criada
             s = new String(message, Constants.ISO_SET);
+
             //System.out.println(s);
             //System.out.println("Tamanho da string criada: " + s.length());
 
 
-            boolean validated = false;
+            /*boolean validated = false;
             byte[] message2 = s.getBytes(StandardCharsets.ISO_8859_1);
 
 
@@ -172,7 +173,7 @@ public class Purchase {
                 } catch (Exception ex) {
                     System.out.println(ex);//error = "\n" + ex.getMessage();
                 }
-            }
+            }*/
         } catch (Exception e) {
             System.out.println(e);
         }
