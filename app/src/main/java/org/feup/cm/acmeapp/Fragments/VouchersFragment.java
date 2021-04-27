@@ -300,12 +300,12 @@ public class VouchersFragment extends Fragment {
                 sharedViewModel.setVoucherList(voucherList);
                 adapter.setVouchersList(voucherList);
                 list.setAdapter(adapter);
-                spinner.setVisibility(View.GONE);
+
 
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
-
+            spinner.setVisibility(View.GONE);
         }
     }
 }

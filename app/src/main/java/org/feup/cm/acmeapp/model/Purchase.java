@@ -1,7 +1,5 @@
 package org.feup.cm.acmeapp.model;
 
-import android.util.Base64;
-
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.Security.KeyPart;
 
@@ -21,6 +19,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -86,24 +85,26 @@ public class Purchase {
 
         if (voucher != null) {
             return "{" +
-                    "\"userId\": \"" + userId + '\"' +
-                    ", \"products\": " + products +
-                    ", \"totalPrice\": " + totalPrice +
-                    ", \"voucherId\": " + voucher +
+                    "\"userId\":\"" + userId + '\"' +
+                    ",\"products\":" + products +
+                    ",\"totalPrice\":" + totalPrice +
+                    ",\"voucherId\":" + voucher +
                     '}';
         }
 
         return "{" +
-                "\"userId\": \"" + userId + '\"' +
-                ", \"products\": " + products +
-                ", \"totalPrice\": " + totalPrice +
+                "\"userId\":\"" + userId + '\"' +
+                ",\"products\":" + products +
+                ",\"totalPrice\":" + totalPrice +
                 '}';
 
     }
 
     public byte[] QRCodeString() {
+        getPubKey();
         //Obtem a mensagem
         String mensagem = this.toString();
+        mensagem.replace(" ", "");
 
         //Obtem o tamanho da mensagem
         int nr = mensagem.length();
@@ -115,14 +116,7 @@ public class Purchase {
         //Coloca a mensagem no buffer
         bb.put(mensagem.getBytes());
 
-        //System.out.println(mensagem);
-        //System.out.println("Tamanho da buffer " + bb.position());
-
-
         byte[] message = bb.array();
-
-
-        String s = null;
 
         try {
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
@@ -135,7 +129,20 @@ public class Purchase {
             sg.sign(message, nr, Constants.KEY_SIZE / 8);
 
             //mensagem criada
-            s = new String(message, Constants.ISO_SET);
+            String s = new String(message, Constants.ISO_SET);
+
+            byte[] completeMessage =  s.getBytes(Constants.ISO_SET);
+            byte[] message2 = new byte[completeMessage.length - Constants.KEY_SIZE / 8];
+            byte[] signature = new byte[Constants.KEY_SIZE / 8];
+
+            ByteBuffer bb1 = ByteBuffer.wrap(completeMessage);
+            bb1.get(message2, 0, completeMessage.length - Constants.KEY_SIZE / 8);
+            bb1.get(signature, 0, Constants.KEY_SIZE / 8);
+
+            System.out.println("Mensagem!"+ new String(message2, Constants.ISO_SET));
+            System.out.println("Mensagem!"+ Base64.getEncoder().encodeToString(message2));
+            System.out.println("Signature!"+ Base64.getEncoder().encodeToString(signature));
+
 
             //System.out.println(s);
             //System.out.println("Tamanho da string criada: " + s.length());
@@ -189,7 +196,9 @@ public class Purchase {
             ks.load(null);
             KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
             PublicKey pub = ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey();
+            System.out.println("PublicKey:"+Base64.getEncoder().encodeToString(pub.getEncoded()));
             pkey = new KeyPart(((RSAPublicKey) pub).getModulus().toByteArray(), ((RSAPublicKey) pub).getPublicExponent().toByteArray());
+
         } catch (Exception ex) {
             System.out.println(ex);
         }

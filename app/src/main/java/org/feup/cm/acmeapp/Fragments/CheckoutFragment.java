@@ -75,7 +75,7 @@ public class CheckoutFragment extends Fragment {
         productList = sharedViewModel.getProductList();
 
         for (Product product : productList) {
-            totalAmount += product.getPrice();
+            totalAmount += product.getPrice()*product.getQuantity();
             totalNumProds = totalNumProds + product.getQuantity();
         }
 

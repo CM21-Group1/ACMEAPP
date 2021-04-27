@@ -100,8 +100,6 @@ public class QRCheckoutFragment extends Fragment {
         convertToQR(byte[] mess) {
             try {
                 content = new String(mess, Constants.ISO_SET);
-                System.out.println(content);
-                System.out.println("Tamanho mensagem QR" + content.length());
             }catch (Exception e){
                 System.out.println(e);
             }
@@ -118,7 +116,6 @@ public class QRCheckoutFragment extends Fragment {
     }
 
     Bitmap encodeAsBitmap(String str) {
-        System.out.println("Mensagem Bitmap" + str);
         BitMatrix result;
         Hashtable<EncodeHintType, String> hints = new Hashtable<>();
         hints.put(EncodeHintType.CHARACTER_SET, Constants.ISO_SET);

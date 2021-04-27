@@ -336,12 +336,12 @@ public class HomeFragment extends Fragment {
 
                 adapter.setProductList(purchaseList);
                 list.setAdapter(adapter);
-                spinner.setVisibility(View.GONE);
+
 
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
-
+            spinner.setVisibility(View.GONE);
         }
     }
 

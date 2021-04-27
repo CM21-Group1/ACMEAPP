@@ -53,10 +53,10 @@ public class Product {
     @Override
     public String toString() {
         return "{" +
-                "\"_id\": \"" + productCode + '\"' +
-                ", \"name\": \"" + name + '\"' +
-                ", \"price\": " + price +
-                ", \"quantity\": " + quantity+
+                "\"_id\":\"" + productCode + '\"' +
+                ",\"name\":\"" + name + '\"' +
+                ",\"price\":" + price +
+                ",\"quantity\":" + quantity+
                 '}';
     }
 }
