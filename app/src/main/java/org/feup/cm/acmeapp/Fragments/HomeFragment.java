@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.clear();
                             editor.apply();
-                            Navigation.findNavController(getView()).navigate(R.id.action_shoppingCartFragment_to_loginFragment);
+                            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_loginFragment);
                         }
                     })
                     .setNegativeButton("Cancel", null)

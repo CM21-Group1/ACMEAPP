@@ -194,7 +194,7 @@ public class VouchersFragment extends Fragment {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.clear();
                             editor.apply();
-                            Navigation.findNavController(getView()).navigate(R.id.action_shoppingCartFragment_to_loginFragment);
+                            Navigation.findNavController(getView()).navigate(R.id.action_vouchersFragment_to_loginFragment);
                         }
                     })
                     .setNegativeButton("Cancel", null)
