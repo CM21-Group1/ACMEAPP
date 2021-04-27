@@ -163,12 +163,20 @@ public class ShoppingCartFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
-            Toast.makeText(getContext(), "Logout, bye!", Toast.LENGTH_SHORT).show();
-            SharedPreferences preferences = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear();
-            editor.apply();
-            Navigation.findNavController(getView()).navigate(R.id.action_shoppingCartFragment_to_loginFragment);
+            new AlertDialog.Builder(getContext()).setTitle("Logout").setMessage("Do you wish to logout?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getContext(), "Logout, bye!", Toast.LENGTH_SHORT).show();
+                            SharedPreferences preferences = getActivity().getBaseContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.clear();
+                            editor.apply();
+                            Navigation.findNavController(getView()).navigate(R.id.action_shoppingCartFragment_to_loginFragment);
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
             return true;
         }
 
