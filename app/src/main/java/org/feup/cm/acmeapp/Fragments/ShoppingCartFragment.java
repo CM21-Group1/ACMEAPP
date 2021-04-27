@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -272,6 +276,7 @@ public class ShoppingCartFragment extends Fragment{
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
             ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
             ((TextView) row.findViewById(R.id.product_quantity)).setText(String.valueOf(productList.get(position).getQuantity()) );
+            new DownloadImageTask((ImageView) row.findViewById(R.id.product_image)).execute(productList.get(position).getImageUrl());
 
             ImageButton deleteBtn = row.findViewById(R.id.delete_product);
             deleteBtn.setOnClickListener(new View.OnClickListener() {
@@ -287,6 +292,31 @@ public class ShoppingCartFragment extends Fragment{
 
         public void setProductList(List<Product> productList) {
             this.productList = productList;
+        }
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
         }
     }
 

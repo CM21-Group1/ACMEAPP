@@ -15,6 +15,10 @@ public class Product {
         quantity = 1;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public String getProductCode() {
         return productCode;
     }
