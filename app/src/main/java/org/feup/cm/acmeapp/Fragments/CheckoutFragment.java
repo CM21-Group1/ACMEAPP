@@ -73,13 +73,11 @@ public class CheckoutFragment extends Fragment {
 
         productList = sharedViewModel.getProductList();
 
-
         for (Product product : productList) {
             totalAmount += product.getPrice();
             totalNumProds = totalNumProds + product.getQuantity();
         }
-
-
+        
         TextView txt_total = root.findViewById(R.id.totalPrice);
         txt_total.setText(totalAmount + "€");
         TextView txt_num = root.findViewById(R.id.numberOfProducts);
