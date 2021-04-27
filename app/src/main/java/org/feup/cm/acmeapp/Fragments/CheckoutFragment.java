@@ -64,6 +64,7 @@ public class CheckoutFragment extends Fragment {
     private Voucher selectedVoucher = null;
     private final double percentage = 0.15;
     private double valueToSubtract = 0;
+    private Button voucher_dialog;
 
 
     @Override
@@ -77,7 +78,7 @@ public class CheckoutFragment extends Fragment {
             totalAmount += product.getPrice();
             totalNumProds = totalNumProds + product.getQuantity();
         }
-        
+
         TextView txt_total = root.findViewById(R.id.totalPrice);
         txt_total.setText(totalAmount + "€");
         TextView txt_num = root.findViewById(R.id.numberOfProducts);
@@ -88,12 +89,11 @@ public class CheckoutFragment extends Fragment {
         totalWithVoucher.setVisibility(View.INVISIBLE);
         totalWithVoucherLabel.setVisibility(View.INVISIBLE);
 
-        Button voucher_dialog = root.findViewById(R.id.voucher_dialog);
+        voucher_dialog = root.findViewById(R.id.voucher_dialog);
         if(voucherList.isEmpty()){
             voucher_dialog.setVisibility(View.GONE);
         }
         voucher_dialog.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 System.out.println(selectedVoucher);
@@ -264,6 +264,10 @@ public class CheckoutFragment extends Fragment {
 
                     voucherList.add(voucherTemp);
                     voucherItems.add("Voucher #" + i + " with 15%");
+                }
+
+                if(!voucherList.isEmpty()){
+                    voucher_dialog.setVisibility(View.VISIBLE);
                 }
 
             } catch (JSONException | ParseException e) {
