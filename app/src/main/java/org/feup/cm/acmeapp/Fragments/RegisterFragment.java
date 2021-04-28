@@ -251,7 +251,7 @@ public class RegisterFragment extends Fragment {
                 jsonBody.put("password", password);
                 jsonBody.put("name", name);
                 jsonBody.put("payment_card", payment_card);
-                jsonBody.put("accumulatedValue", 0);
+                jsonBody.put("accumulatedValue", "0");
                 jsonBody.put("publicKey",publicKey);
 
                 System.out.println(jsonBody);
