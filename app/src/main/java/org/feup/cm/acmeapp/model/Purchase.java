@@ -87,7 +87,7 @@ public class Purchase {
             return "{" +
                     "\"userId\":\"" + userId + '\"' +
                     ",\"products\":" + products +
-                    ",\"totalPrice\":" + totalPrice +
+                    ",\"totalPrice\":\"" + totalPrice + '\"' +
                     ",\"voucherId\":" + voucher +
                     '}';
         }
@@ -95,7 +95,7 @@ public class Purchase {
         return "{" +
                 "\"userId\":\"" + userId + '\"' +
                 ",\"products\":" + products +
-                ",\"totalPrice\":" + totalPrice +
+                ",\"totalPrice\":\"" + totalPrice + '\"' +
                 '}';
 
     }

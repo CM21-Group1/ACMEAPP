@@ -55,8 +55,8 @@ public class Product {
         return "{" +
                 "\"_id\":\"" + productCode + '\"' +
                 ",\"name\":\"" + name + '\"' +
-                ",\"price\":" + price +
-                ",\"quantity\":" + quantity+
+                ",\"price\":\"" + price +'\"' +
+                ",\"quantity\":\"" + quantity+'\"' +
                 '}';
     }
 }

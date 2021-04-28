@@ -36,6 +36,6 @@ public class Voucher {
 
     @Override
     public String toString() {
-        return get_id();
+        return "\""+get_id()+"\"";
     }
 }

@@ -148,7 +148,7 @@ public class ShoppingCartFragment extends Fragment{
         supermakerPublicKey = settings.getString(Constants.PREF_PUBLICKEYSP, "");
 
         //teste (remove)
-        productList.add(new Product("Teste", "test", Math.random(), "teste"));
+        //productList.add(new Product("Teste", "test", Math.random(), "teste"));
 
         updateProductList();
 

@@ -147,7 +147,7 @@ public class RegisterFragment extends Fragment {
 
                     //Creates and stores the keys
                     createAndStoreKey();
-                    getPublicKey();
+                    //getPublicKey();
 
                     //Makes the request
                     new APIRequestCreateUser().execute();
@@ -194,9 +194,9 @@ public class RegisterFragment extends Fragment {
     //Creates and stores the user private and public key and stores them in the keystore
     private void createAndStoreKey(){
         try {
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
+            /*KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
             ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
+            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);*/
 
             Calendar start = new GregorianCalendar();
             Calendar end = new GregorianCalendar();
@@ -213,14 +213,14 @@ public class RegisterFragment extends Fragment {
 
             kgen.initialize(spec);
             KeyPair kp = kgen.generateKeyPair();
-
+            publicKey = Base64.getEncoder().encodeToString(kp.getPublic().getEncoded());
         }catch (Exception e){
             System.out.println(e + " in creation of the key");
         }
     }
 
     //Stores the created key
-    private void getPublicKey() {
+    /*private void getPublicKey() {
         try {
             //Gets the KeyStore
             KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
@@ -229,11 +229,11 @@ public class RegisterFragment extends Fragment {
 
             //Creates the two adapter class keys
             PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            publicKey = Base64.getEncoder().encodeToString(pub.getEncoded());//new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
+            //new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
         }catch (Exception e){
             System.out.println(e + " in load of public the key");
         }
-    }
+    }*/
 
     private class APIRequestCreateUser extends AsyncTask<Void, Void, String> {
 
