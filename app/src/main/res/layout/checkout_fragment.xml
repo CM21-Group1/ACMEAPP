@@ -101,19 +101,6 @@
         android:orientation="vertical">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/nfc_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:src="@drawable/outline_nfc_black_18"
-            android:padding="20dp"
-            app:backgroundTint="#673AB7"
-            android:text="@string/proceed_to_checkout"
-            app:tint="@color/white"
-            android:textColor="@color/white" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/pay_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

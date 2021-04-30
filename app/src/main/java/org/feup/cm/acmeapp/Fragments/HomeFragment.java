@@ -248,7 +248,7 @@ public class HomeFragment extends Fragment {
             String strDate = dateFormat.format(purchaseList.get(position).getDate());
 
             ((TextView) row.findViewById(R.id.date)).setText(strDate);
-            ((TextView) row.findViewById(R.id.total_amount)).setText(String.valueOf(purchaseList.get(position).getTotalPrice()) + "€");
+            ((TextView) row.findViewById(R.id.total_amount)).setText(purchaseList.get(position).getTotalPrice() + "€");
 
             return (row);
         }

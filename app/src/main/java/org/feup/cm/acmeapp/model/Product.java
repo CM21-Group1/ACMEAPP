@@ -35,6 +35,9 @@ public class Product {
         return price;
     }
 
+    public String getPriceStr() {
+        return String.format("%.02f", price);
+    }
 
     public void increaseQuantity(){
         quantity++;
@@ -55,7 +58,7 @@ public class Product {
         return "{" +
                 "\"_id\":\"" + productCode + '\"' +
                 ",\"name\":\"" + name + '\"' +
-                ",\"price\":\"" + price +'\"' +
+                ",\"price\":\"" + getPriceStr() +'\"' +
                 ",\"quantity\":\"" + quantity+'\"' +
                 '}';
     }

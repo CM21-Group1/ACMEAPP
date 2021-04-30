@@ -32,6 +32,7 @@ public class Purchase {
     private Voucher voucher;
 
     public Purchase() {
+
     }
 
     public Purchase(String userId, List<Product> products, double totalPrice) {
@@ -46,7 +47,6 @@ public class Purchase {
         this.totalPrice = totalPrice;
         this.voucher = voucher;
     }
-
 
     public String getUserId() {
         return userId;
@@ -64,8 +64,8 @@ public class Purchase {
         this.products = products;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public String getTotalPrice() {
+        return String.format("%.02f", totalPrice);
     }
 
     public void setTotalPrice(double totalPrice) {
@@ -87,7 +87,7 @@ public class Purchase {
             return "{" +
                     "\"userId\":\"" + userId + '\"' +
                     ",\"products\":" + products +
-                    ",\"totalPrice\":\"" + totalPrice + '\"' +
+                    ",\"totalPrice\":\"" + String.format("%.02f", totalPrice) + '\"' +
                     ",\"voucherId\":" + voucher +
                     '}';
         }
@@ -95,7 +95,7 @@ public class Purchase {
         return "{" +
                 "\"userId\":\"" + userId + '\"' +
                 ",\"products\":" + products +
-                ",\"totalPrice\":\"" + totalPrice + '\"' +
+                ",\"totalPrice\":\"" + String.format("%.02f", totalPrice) + '\"' +
                 '}';
 
     }
@@ -131,7 +131,7 @@ public class Purchase {
             //mensagem criada
             String s = new String(message, Constants.ISO_SET);
 
-            byte[] completeMessage =  s.getBytes(Constants.ISO_SET);
+            byte[] completeMessage = s.getBytes(Constants.ISO_SET);
             byte[] message2 = new byte[completeMessage.length - Constants.KEY_SIZE / 8];
             byte[] signature = new byte[Constants.KEY_SIZE / 8];
 
@@ -139,9 +139,9 @@ public class Purchase {
             bb1.get(message2, 0, completeMessage.length - Constants.KEY_SIZE / 8);
             bb1.get(signature, 0, Constants.KEY_SIZE / 8);
 
-            System.out.println("Mensagem!"+ new String(message2, Constants.ISO_SET));
-            System.out.println("Mensagem!"+ Base64.getEncoder().encodeToString(message2));
-            System.out.println("Signature!"+ Base64.getEncoder().encodeToString(signature));
+            System.out.println("Mensagem!" + new String(message2, Constants.ISO_SET));
+            System.out.println("Mensagem!" + Base64.getEncoder().encodeToString(message2));
+            System.out.println("Signature!" + Base64.getEncoder().encodeToString(signature));
 
 
             //System.out.println(s);
@@ -196,7 +196,7 @@ public class Purchase {
             ks.load(null);
             KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
             PublicKey pub = ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey();
-            System.out.println("PublicKey:"+Base64.getEncoder().encodeToString(pub.getEncoded()));
+            System.out.println("PublicKey:" + Base64.getEncoder().encodeToString(pub.getEncoded()));
             pkey = new KeyPart(((RSAPublicKey) pub).getModulus().toByteArray(), ((RSAPublicKey) pub).getPublicExponent().toByteArray());
 
         } catch (Exception ex) {

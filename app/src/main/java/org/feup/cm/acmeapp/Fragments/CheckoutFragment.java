@@ -80,7 +80,7 @@ public class CheckoutFragment extends Fragment {
         }
 
         TextView txt_total = root.findViewById(R.id.totalPrice);
-        txt_total.setText(totalAmount + "€");
+        txt_total.setText( String.format("%.02f", totalAmount) + "€");
         TextView txt_num = root.findViewById(R.id.numberOfProducts);
         txt_num.setText(String.valueOf(totalNumProds));
 
@@ -121,7 +121,7 @@ public class CheckoutFragment extends Fragment {
                                     System.out.println(selectedVoucher.get_id());
                                     valueToSubtract = totalAmount * percentage;
                                     totalAmount -= valueToSubtract;
-                                    totalWithVoucher.setText(totalAmount + "€");
+                                    totalWithVoucher.setText( String.format("%.02f", totalAmount)  + "€");
                                     totalWithVoucher.setVisibility(View.VISIBLE);
                                     totalWithVoucherLabel.setVisibility(View.VISIBLE);
                                     voucher_dialog.setText(getString(R.string.remove_Voucher));
@@ -132,7 +132,7 @@ public class CheckoutFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int id) {
                                     selectedVoucher = null;
                                     totalAmount += valueToSubtract;
-                                    totalWithVoucher.setText(totalAmount + "€");
+                                    totalWithVoucher.setText( String.format("%.02f", totalAmount)  + "€");
                                     totalWithVoucher.setVisibility(View.INVISIBLE);
                                     totalWithVoucherLabel.setVisibility(View.INVISIBLE);
                                 }
@@ -142,7 +142,7 @@ public class CheckoutFragment extends Fragment {
                 }else{
                     selectedVoucher = null;
                     totalAmount += valueToSubtract;
-                    totalWithVoucher.setText(totalAmount + "€");
+                    totalWithVoucher.setText( String.format("%.02f", totalAmount)  + "€");
                     totalWithVoucher.setVisibility(View.INVISIBLE);
                     totalWithVoucherLabel.setVisibility(View.INVISIBLE);
                     voucher_dialog.setText(getString(R.string.add_voucher));
@@ -184,19 +184,6 @@ public class CheckoutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(root).navigateUp();
-            }
-        });
-
-        FloatingActionButton nfc_btn = root.findViewById(R.id.nfc_btn);
-        nfc_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(selectedVoucher == null){
-                    sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount));
-                }else{
-                    sharedViewModel.setPurchase(new Purchase(userId, productList, totalAmount, selectedVoucher));
-                }
-                Navigation.findNavController(root).navigate(R.id.action_checkoutFragment_to_NFCFragment);
             }
         });
 

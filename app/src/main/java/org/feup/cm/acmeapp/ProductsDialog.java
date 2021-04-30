@@ -72,7 +72,7 @@ public class ProductsDialog extends Dialog implements android.view.View.OnClickL
 
             System.out.println(productList.get(position).getName());
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
-            ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
+            ((TextView) row.findViewById(R.id.product_price)).setText(String.format("%.02f", productList.get(position).getPrice()*productList.get(position).getQuantity() )+ "€");
 
             return (row);
         }

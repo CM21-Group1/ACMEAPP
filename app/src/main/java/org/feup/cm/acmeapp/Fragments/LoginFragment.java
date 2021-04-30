@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.security.KeyPairGeneratorSpec;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Security.KeyPart;
+import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
@@ -53,21 +55,18 @@ import javax.security.auth.x500.X500Principal;
 
 public class LoginFragment extends Fragment {
 
-    private String username;
-    private String password;
+    private String username, password, publicKey;
     private View viewTemp;
     private EditText username_edittext;
     private EditText password_edittext;
-
-    private String publicKey;
+    private ProgressBar spinner;
+    private SharedViewModel sharedViewModel;
 
     private final String DefaultUnameValue = "";
     private String UnameValue;
 
     private final String DefaultPasswordValue = "";
     private String PasswordValue;
-
-    private ProgressBar spinner;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -165,6 +164,9 @@ public class LoginFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment, bundle);
             }
         });
+
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel.resetValues();
 
         return root;
     }

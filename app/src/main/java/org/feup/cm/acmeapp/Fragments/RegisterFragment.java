@@ -21,11 +21,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.Security.KeyPart;
+import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
@@ -50,13 +52,10 @@ import java.util.GregorianCalendar;
 import javax.security.auth.x500.X500Principal;
 
 public class RegisterFragment extends Fragment {
-    private String username;
-    private String password;
-    private String name;
-    private String payment_card;
-    private String publicKey;
+    private String username, password, name, payment_card, publicKey;
     private View viewTemp;
     private ProgressBar spinner;
+    private SharedViewModel sharedViewModel;
 
 
     @Override
@@ -69,6 +68,8 @@ public class RegisterFragment extends Fragment {
 
         spinner = root.findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
+
+
 
 //        TODO
 //         Check internet connection dialog. Only dismiss if the internet connection back online again
@@ -139,9 +140,9 @@ public class RegisterFragment extends Fragment {
                 } else if (name.isEmpty()) {
                     spinner.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Name empty", Toast.LENGTH_LONG).show();
-                } else if (payment_card.isEmpty()) {
+                } else if (payment_card.isEmpty() || payment_card.length() != 16) {
                     spinner.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), "Payment_card empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Invalid Payment Card", Toast.LENGTH_LONG).show();
                 } else {
                     viewTemp = view;
 
@@ -161,6 +162,9 @@ public class RegisterFragment extends Fragment {
                 Navigation.findNavController(root).popBackStack();
             }
         });
+
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel.resetValues();
 
         return root;
     }

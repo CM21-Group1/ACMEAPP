@@ -57,7 +57,9 @@
             android:ems="10"
             android:hint="@string/payment_card"
             android:imeOptions="actionDone"
+            android:maxLength="16"
             android:inputType="number" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -282,7 +282,7 @@ public class ShoppingCartFragment extends Fragment{
             View row = getLayoutInflater().inflate(R.layout.row, parent, false);
 
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
-            ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
+            ((TextView) row.findViewById(R.id.product_price)).setText(productList.get(position).getPriceStr() + "€");
             ((TextView) row.findViewById(R.id.product_quantity)).setText(String.valueOf(productList.get(position).getQuantity()) );
             new DownloadImageTask((ImageView) row.findViewById(R.id.product_image)).execute(productList.get(position).getImageUrl());
 

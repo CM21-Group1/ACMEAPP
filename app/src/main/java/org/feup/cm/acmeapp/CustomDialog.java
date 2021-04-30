@@ -72,7 +72,7 @@ public class CustomDialog extends Dialog implements android.view.View.OnClickLis
 
             System.out.println(productList.get(position).getName());
             ((TextView) row.findViewById(R.id.product_name)).setText(productList.get(position).getName());
-            ((TextView) row.findViewById(R.id.product_price)).setText(String.valueOf(productList.get(position).getPrice()) + "€");
+            ((TextView) row.findViewById(R.id.product_price)).setText(productList.get(position).getPriceStr() + "€");
 
             return (row);
         }

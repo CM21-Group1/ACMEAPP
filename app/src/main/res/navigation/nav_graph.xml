@@ -97,9 +97,6 @@
         <action
             android:id="@+id/action_checkoutFragment_to_QRCheckoutFragment"
             app:destination="@id/QRCheckoutFragment" />
-        <action
-            android:id="@+id/action_checkoutFragment_to_NFCFragment"
-            app:destination="@id/NFCFragment" />
     </fragment>
     <fragment
         android:id="@+id/vouchersFragment"
@@ -135,10 +132,5 @@
             app:popUpToInclusive="true"
             app:destination="@id/homeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/NFCFragment"
-        android:name="org.feup.cm.acmeapp.Fragments.NFCFragment"
-        android:label="fragment_n_f_c"
-        tools:layout="@layout/fragment_n_f_c" />
 
 </navigation>

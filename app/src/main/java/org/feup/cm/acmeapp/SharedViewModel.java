@@ -37,4 +37,10 @@ public class SharedViewModel extends ViewModel {
         this.voucherList = voucherList;
     }
 
+    public void resetValues(){
+        voucherList = null;
+        productList = null;
+        purchase = null;
+    }
+
 }
