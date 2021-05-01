@@ -233,7 +233,7 @@ public class ShoppingCartFragment extends Fragment{
                 if (error){
                     System.out.println("QR Invalido");
                 }
-                if (productDecrypter!= null){
+                if (productDecrypter.getProduct()!= null){
                     //Aux variable if the product exists
                     Boolean productExists = false;
                     for (Product pr : productList){

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SharedViewModel extends ViewModel {
     private List<Product> productList;
-    private List<Voucher> voucherList;
     private Purchase purchase;
 
     public List<Product> getProductList() {
@@ -29,16 +28,7 @@ public class SharedViewModel extends ViewModel {
         this.purchase = purchase;
     }
 
-    public List<Voucher> getVoucherList() {
-        return voucherList;
-    }
-
-    public void setVoucherList(List<Voucher> voucherList) {
-        this.voucherList = voucherList;
-    }
-
     public void resetValues(){
-        voucherList = null;
         productList = null;
         purchase = null;
     }

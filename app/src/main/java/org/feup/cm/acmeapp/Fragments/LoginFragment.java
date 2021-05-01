@@ -314,6 +314,7 @@ public class LoginFragment extends Fragment {
             kgen.initialize(spec);
             KeyPair kp = kgen.generateKeyPair();
 
+
         }catch (Exception e){
             System.out.println(e + " in creation of the key");
         }

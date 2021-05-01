@@ -66,7 +66,6 @@ public class VouchersFragment extends Fragment {
     private List<Voucher> voucherList = new ArrayList<>();
     private CustomArrayAdapter adapter;
     private String userId;
-    private SharedViewModel sharedViewModel;
 
     private ProgressBar spinner;
 
@@ -75,7 +74,6 @@ public class VouchersFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
-        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
 
 //        TODO
 //         Check internet connection dialog. Only dismiss if the internet connection back online again
@@ -297,7 +295,6 @@ public class VouchersFragment extends Fragment {
                     }
                 });
 
-                sharedViewModel.setVoucherList(voucherList);
                 adapter.setVouchersList(voucherList);
                 list.setAdapter(adapter);
 
