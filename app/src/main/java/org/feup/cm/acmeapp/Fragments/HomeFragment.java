@@ -77,10 +77,6 @@ public class HomeFragment extends Fragment {
         bottomNavigation = root.findViewById(R.id.bottomNavigationView);
         bottomNavigation.setSelectedItemId(R.id.home);
 
-//        TODO
-//         Check internet connection dialog. Only dismiss if the internet connection back online again
-//         Do this dialog in every fragment to check connection
-//         ######################################################################################################################
         if (!isOnline()) {
             try {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -118,8 +114,6 @@ public class HomeFragment extends Fragment {
                 System.out.println();
             }
         }
-        // TODO
-        //  #########################################################################################################################
 
         setHasOptionsMenu(true);
         spinner = root.findViewById(R.id.progressBar);

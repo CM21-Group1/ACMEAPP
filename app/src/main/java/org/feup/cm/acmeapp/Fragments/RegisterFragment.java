@@ -26,10 +26,8 @@ import androidx.navigation.Navigation;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
-import org.feup.cm.acmeapp.Security.KeyPart;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
-import org.feup.cm.acmeapp.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,9 +39,6 @@ import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -69,12 +64,6 @@ public class RegisterFragment extends Fragment {
         spinner = root.findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
-
-
-//        TODO
-//         Check internet connection dialog. Only dismiss if the internet connection back online again
-//         Do this dialog in every fragment to check connection
-//         ######################################################################################################################
         if(!isOnline()){
             try {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -111,8 +100,7 @@ public class RegisterFragment extends Fragment {
                 System.out.println();
             }
         }
-        // TODO
-        //  #########################################################################################################################
+
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,9 +186,6 @@ public class RegisterFragment extends Fragment {
     //Creates and stores the user private and public key and stores them in the keystore
     private void createAndStoreKey(){
         try {
-            /*KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);*/
 
             Calendar start = new GregorianCalendar();
             Calendar end = new GregorianCalendar();
@@ -222,22 +207,6 @@ public class RegisterFragment extends Fragment {
             System.out.println(e + " in creation of the key");
         }
     }
-
-    //Stores the created key
-    /*private void getPublicKey() {
-        try {
-            //Gets the KeyStore
-            KeyStore ks = KeyStore.getInstance(Constants.ANDROID_KEYSTORE);
-            ks.load(null);
-            KeyStore.Entry entry = ks.getEntry(Constants.keyname, null);
-
-            //Creates the two adapter class keys
-            PublicKey pub = ((KeyStore.PrivateKeyEntry)entry).getCertificate().getPublicKey();
-            //new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();new KeyPart(((RSAPublicKey)pub).getModulus().toByteArray(),((RSAPublicKey)pub).getPublicExponent().toByteArray()).toString();
-        }catch (Exception e){
-            System.out.println(e + " in load of public the key");
-        }
-    }*/
 
     private class APIRequestCreateUser extends AsyncTask<Void, Void, String> {
 

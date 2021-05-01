@@ -47,18 +47,6 @@ public class User implements Parcelable {
         return name;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPayment_card() {
-        return payment_card;
-    }
-
     @Override
     public int describeContents() {
         return 0;

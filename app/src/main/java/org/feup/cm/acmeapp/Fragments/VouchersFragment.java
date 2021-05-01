@@ -75,10 +75,6 @@ public class VouchersFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.vouchers_fragment, container, false);
 
-//        TODO
-//         Check internet connection dialog. Only dismiss if the internet connection back online again
-//         Do this dialog in every fragment to check connection
-//         ######################################################################################################################
         if (!isOnline()) {
             try {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -116,8 +112,6 @@ public class VouchersFragment extends Fragment {
                 System.out.println();
             }
         }
-        // TODO
-        //  #########################################################################################################################
 
         setHasOptionsMenu(true);
         spinner = root.findViewById(R.id.progressBar);

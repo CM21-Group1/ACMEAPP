@@ -1,7 +1,5 @@
 package org.feup.cm.acmeapp.Fragments;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +26,6 @@ import android.widget.Toast;
 
 import org.feup.cm.acmeapp.Constants;
 import org.feup.cm.acmeapp.R;
-import org.feup.cm.acmeapp.Security.KeyPart;
 import org.feup.cm.acmeapp.SharedViewModel;
 import org.feup.cm.acmeapp.Utils;
 import org.feup.cm.acmeapp.model.User;
@@ -45,7 +42,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
 import java.util.Calendar;
@@ -76,10 +72,6 @@ public class LoginFragment extends Fragment {
         final Button buttonLogin = root.findViewById(R.id.login_btn);
         final Button buttonSignUp = root.findViewById(R.id.register_btn);
 
-//        TODO
-//         Check internet connection dialog. Only dismiss if the internet connection back online again
-//         Do this dialog in every fragment to check connection
-//         ######################################################################################################################
         if(!isOnline()){
             try {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -116,8 +108,6 @@ public class LoginFragment extends Fragment {
                 System.out.println();
             }
         }
-        // TODO
-        //  #########################################################################################################################
 
         username_edittext = root.findViewById(R.id.edit_username);
         password_edittext = root.findViewById(R.id.edit_pwd);
