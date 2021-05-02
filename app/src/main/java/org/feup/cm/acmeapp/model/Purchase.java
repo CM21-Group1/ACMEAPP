@@ -1,6 +1,9 @@
 package org.feup.cm.acmeapp.model;
 
+import com.google.gson.JsonObject;
+
 import org.feup.cm.acmeapp.Constants;
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 import java.security.KeyStore;
@@ -99,7 +102,18 @@ public class Purchase {
     public byte[] QRCodeString() {
         //Obtem a mensagem
         String mensagem = this.toString();
-        mensagem.replace(" ", "");
+        JSONObject json;
+        try{
+
+            json = new JSONObject(mensagem);
+
+            mensagem = json.toString();
+        } catch (Exception ex){
+            System.out.println("Error!!!!!!!");
+            return null;
+        }
+
+        System.out.println(mensagem);
 
         //Obtem o tamanho da mensagem
         int nr = mensagem.length();

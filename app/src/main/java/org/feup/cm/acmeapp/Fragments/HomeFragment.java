@@ -309,7 +309,7 @@ public class HomeFragment extends Fragment {
                     Date date = format.parse(purchaseJson.get("createdAt").toString());
                     purchaseTemp.setUserId(purchaseJson.get("userId").toString());
                     purchaseTemp.setDate(date);
-                    purchaseTemp.setTotalPrice(Double.parseDouble(purchaseJson.get("totalPrice").toString()));
+                    purchaseTemp.setTotalPrice(Double.parseDouble(purchaseJson.get("totalPrice").toString().replace(",", ".")));
 
                     if(!purchaseJson.isNull("voucherId")){
                         Voucher voucherTemp = new Voucher();
@@ -322,7 +322,7 @@ public class HomeFragment extends Fragment {
                     for (int j = 0; j < products.length(); j++) {
                         String _id = products.getJSONObject(j).getString("_id");
                         String name = products.getJSONObject(j).getString("name");
-                        String price = products.getJSONObject(j).getString("price");
+                        String price = products.getJSONObject(j).getString("price").replace(",", ".");
                         //String url = products.getJSONObject(j).getString("url");
                         Product product = new Product(_id, name, Double.parseDouble(price), "Falta URL");
 
