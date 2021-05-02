@@ -38,6 +38,7 @@ import org.feup.cm.acmeapp.ProductsDialog;
 import org.feup.cm.acmeapp.R;
 import org.feup.cm.acmeapp.model.Product;
 import org.feup.cm.acmeapp.model.Purchase;
+import org.feup.cm.acmeapp.model.Voucher;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,9 +173,15 @@ public class HomeFragment extends Fragment {
                 // Create a dialog for each purchase clicked. Dialog with all products listed
                 Purchase purchaseClicked = purchaseList.get(position);
 
-                ProductsDialog cdd = new ProductsDialog(getActivity(), purchaseClicked.getProducts());
-                cdd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                cdd.show();
+                if(purchaseClicked.getVoucher() != null){
+                    ProductsDialog cdd = new ProductsDialog(getActivity(), purchaseClicked.getProducts(), purchaseClicked.getVoucher());
+                    cdd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    cdd.show();
+                }else{
+                    ProductsDialog cdd = new ProductsDialog(getActivity(), purchaseClicked.getProducts());
+                    cdd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    cdd.show();
+                }
             }
         });
 
@@ -303,6 +310,12 @@ public class HomeFragment extends Fragment {
                     purchaseTemp.setUserId(purchaseJson.get("userId").toString());
                     purchaseTemp.setDate(date);
                     purchaseTemp.setTotalPrice(Double.parseDouble(purchaseJson.get("totalPrice").toString()));
+
+                    if(!purchaseJson.isNull("voucherId")){
+                        Voucher voucherTemp = new Voucher();
+                        voucherTemp.set_id(purchaseJson.get("voucherId").toString());
+                        purchaseTemp.setVoucher(voucherTemp);
+                    }
 
                     List<Product> productsList = new ArrayList<>();
                     JSONArray products = (JSONArray) purchaseJson.get("products");

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import org.feup.cm.acmeapp.model.Product;
+import org.feup.cm.acmeapp.model.Voucher;
 
 import java.util.List;
 
@@ -24,11 +25,19 @@ public class ProductsDialog extends Dialog implements android.view.View.OnClickL
     private List<Product> productList;
     private CustomArrayAdapter adapter;
     private ListView list;
+    private Voucher voucher;
 
     public ProductsDialog(Activity a, List<Product> productList) {
         super(a);
         this.c = a;
         this.productList = productList;
+    }
+
+    public ProductsDialog(Activity a, List<Product> productList, Voucher voucher) {
+        super(a);
+        this.c = a;
+        this.productList = productList;
+        this.voucher = voucher;
     }
 
     @Override
@@ -37,11 +46,18 @@ public class ProductsDialog extends Dialog implements android.view.View.OnClickL
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.custom_dialog);
 
+        if(voucher != null){
+            ((TextView) findViewById(R.id.voucher_name)).setText("Voucher used (ID) " + voucher.get_id());
+        }else{
+            ((TextView) findViewById(R.id.voucher_name)).setVisibility(View.GONE);
+        }
+
         list = findViewById(R.id.product_array);
         adapter = new CustomArrayAdapter(c.getApplicationContext(), 0, productList);
 
         adapter.setProductList(productList);
         list.setAdapter(adapter);
+
     }
 
     @Override

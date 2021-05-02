@@ -68,6 +68,14 @@ public class Purchase {
         this.date = date;
     }
 
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
     @Override
     public String toString() {
 
